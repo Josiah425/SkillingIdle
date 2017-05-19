@@ -175,9 +175,9 @@ body{
 </style>
 <body onload = "start()">
 <script>
-	var soundWood = new Audio("ChoppingWood2.mp3");
+	var soundWood = new Audio("music/ChoppingWood2.mp3");
 	soundWood.volume = .56;
-	var backgroundSound = new Audio("Background.mp3");
+	var backgroundSound = new Audio("music/Background.mp3");
 	backgroundSound.loop = true;
 	backgroundSound.volume = .58;
 	backgroundSound.play();
@@ -3114,7 +3114,7 @@ body{
 	<div class="wrapperTop" style="display:block" id="Woodcutting">
 		<div class="main-content">
 			<h1>SkillingIdle</h1>
-			<img src="hatchet.png" style="float:left"/><h2><div id = "woodcutExp"></div></h2><br>
+			<img src="assets/hatchet.png" style="float:left"/><h2><div id = "woodcutExp"></div></h2><br>
 			<button id="treeButton" onclick="logIndex = 0; getTreeLogs();"><p>Tree</p></button>
 			<p id = "logs">Logs: 0</p>
 			<button id="oakButton" style="display:none" onclick="logIndex = 1; getOakLogs();"><p>Oak</p></button>
@@ -3141,7 +3141,7 @@ body{
 		<div class="farther">
 			<h1 class="customH3">General Store<h1>
 			<div>
-			<img src="smallCoin.gif" style="float:left"/><h2 class="customH3" id = "golden"></h2>
+			<img src="assets/smallCoin.gif" style="float:left"/><h2 class="customH3" id = "golden"></h2>
 			</div>
 			<button class="button3 p3" id = "sellLogButton" disabled="true" onclick="sellLog();">Sell Log: 1 GP</button>
 			<br>
@@ -3160,7 +3160,7 @@ body{
 	<div class="wrapperTop" style="display:none" id="Mining">
 		<div class="main-content">
 			<h1>SkillingIdle</h1>
-			<img src="pickaxe.png" style="float:left"/><h2><div id="miningExp"></div></h2><br>
+			<img src="assets/pickaxe.png" style="float:left"/><h2><div id="miningExp"></div></h2><br>
 			<button style="background-color:cyan; color:grey" id="copperButton" onclick="getCopper();"><p>Copper</p></button>
 			<p id="copper">Copper: 0</p>
 			<button style="background-color:cyan; color:grey" id="tinButton" onclick="getTin();"><p>Tin</p></button>
@@ -3190,7 +3190,7 @@ body{
 		<div class="farther">
 			<h1 class="customH3">General Store<h1>
 			<div>
-			<img src="smallCoin.gif" style="float:left"/><h2 class="customH3" id = "golden2"></h2>
+			<img src="assets/smallCoin.gif" style="float:left"/><h2 class="customH3" id = "golden2"></h2>
 			</div>
 			<button class="button3 p3" id = "sellCopperButton" disabled="true" onclick="sellCopper();">Sell Copper: 1 GP</button>
 			<br>
@@ -3211,7 +3211,7 @@ body{
 	<div class="wrapperTop" style="display:none" id="Fishing">
 		<div class="main-content">
 			<h1>SkillingIdle</h1>
-			<img src="fishing_rod.png" style="float:left"/><h2><div id="fishingExp"></div></h2><br>
+			<img src="assets/fishing_rod.png" style="float:left"/><h2><div id="fishingExp"></div></h2><br>
 			<button style="background-color:white; color:grey" id="shrimpButton" onclick="getShrimp();"><p>Shrimp</p></button>
 			<p id="shrimp">Shrimp: 0</p>
 			<button style="background-color:white; color:grey; display:none" id="troutButton" onclick="getTrout();"><p>Trout</p></button>
@@ -3241,7 +3241,7 @@ body{
 		<div class="farther">
 			<h1 class="customH3">General Store<h1>
 			<div>
-			<img src="smallCoin.gif" style="float:left"/><h2 class="customH3" id="golden3"></h2>
+			<img src="assets/smallCoin.gif" style="float:left"/><h2 class="customH3" id="golden3"></h2>
 			</div>
 			<button class="button3 p3" id = "sellShrimpButton" disabled="true" onclick="sellShrimp();">Sell Shrimp: 1 GP</button>
 			<br>
@@ -3262,7 +3262,7 @@ body{
 	<div class="wrapperTop" style="display:none" id="Combat">
 		<div class="main-content">
 			<h1>SkillingIdle</h1>
-			<img src="test.gif" style="float:left"/><h4><div id="combatExp" style="float:left"></div></h4><br><br>
+			<img src="assets/test.gif" style="float:left"/><h4><div id="combatExp" style="float:left"></div></h4><br><br>
 			<h4 style="color: yellow; float:left" id="enemyHp"></h4><h4 style="color: blue" id="health"></h4>
 			<h4><div id="attackExp"></div></h4>
 			<button style="background-color: red; color: black" font="24px" id="attackButton" onclick="setAttack(); attackEnemy();"><p>Attack</p></button>
@@ -3300,7 +3300,7 @@ body{
 	<div class="wrapperCrafting" style="display:none" id="Crafting">
 		<div class="main-content; width=100%">
 			<h1>SkillingIdle</h1>
-			<img src="fishing_rod.png" style="float:left"/><h2><div id="craftingExp"></div></h2><br>
+			<img src="assets/fishing_rod.png" style="float:left"/><h2><div id="craftingExp"></div></h2><br>
 			
 		</div>
 		<div class="wrapperCrafts">

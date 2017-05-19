@@ -1,0 +1,167 @@
+
+p{
+	font-size: 13px;
+}
+.p2{
+	font-size: 20px;
+	line-height: 2;
+}
+.p3{
+	font-size: 18px;
+	line-height: 2.5;
+}
+h1{
+	font-size: 35px;
+}
+.h1Bottom{
+	font-size: 30px;
+}
+h2{
+	font-size: 20px;
+}
+.customH2{
+	color: blue;
+}
+.customH3{
+	font-size: 24px;
+	color: #FFDD11;
+}
+table{
+	font-size: 30px;
+	border-collapse: separate;
+	empty-cells: show;
+}
+button{
+	background-color: green;
+	color: tan;
+	padding: 0px 5px;
+}
+.button2{
+	background-color: green;
+	color: tan;
+	padding: 0px 5px;
+}
+.button3{
+	background-color: #DCAA2B;
+	color: white;
+	padding: 0px 5px;
+}
+.craftingButtons{
+	background-color: white;
+	width: 150;
+	height: 35;
+	color: brown;
+	padding: 0px 5px;
+}
+.roundButton{
+	width: 8%;
+}
+.round-button-circle{
+	width: 65;
+	height: 0;
+	padding-bottom: 100%;
+	border-radius: 50%;
+	border: 1px;
+	overflow: hidden;
+	background: #FF6600;
+}
+.roundButton p {
+    display: inline;
+	float:left;
+	width: 100%;
+	padding-top:50%;
+    padding-bottom:50%;
+	line-height:1em;
+	margin-top: -.2em;
+    
+	text-align:center;
+	color: yellow;
+    font-family:Verdana;
+    font-size: 10px;
+    font-weight:bold;
+    text-decoration:none;
+}
+.round-button-circle:hover {
+	background:#30588e;
+}
+body{
+	background-color: #D2B26F;
+	background-repeat: no repeat;
+	background-size: cover;
+	width: 100%;
+    height: 100%;
+}
+.main-content{
+	height:75%;
+    width: 45%;
+    float: left;
+}
+.aside{
+	height: 75%;
+    width: 35%;
+    float: left;
+}
+.farther{
+	height: 75%;
+	width: 20%;
+    float: left; 
+}
+.wrapperTop, html, body{
+    top: 78%;
+}
+.map{
+	width: 45%;
+	float: left;
+}
+.inventory{
+	width: 35%;
+	float: left;
+}
+.bank{
+	width: 20%;
+	float: left;
+}
+.wrapperBottom, html, body{
+	top: 0;
+}
+.wrapperCrafts{
+	height: 65%;
+	width: 10%;
+	float: left;
+}
+.wrapperCrafting, html, body{
+	top: 10%;
+	width: 100%;
+}
+.levelChart{
+	width: 50%;
+	padding-top:10%;
+	padding-bottom:10%;
+	line-height: 50px;
+	margin-top: -10px;
+	
+	text-align: center;
+	color: navy;
+	font-family: Verdana;
+	font-size: 24px;
+	font-weight:bold;
+	text-decoration:none;
+}
+#myProgress {
+  position: relative;
+  width: 40%;
+  height: 30px;
+  background-color: #ddd;
+}
+
+#myBar {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background-color: #4CAF50;
+}
+#label {
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
