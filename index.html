@@ -56,6 +56,7 @@ button{
 .craftingButtons{
 	background-color: white;
 	width: 150;
+	height: 35;
 	color: brown;
 	padding: 0px 5px;
 }
@@ -184,22 +185,22 @@ body{
 	soundWood.loop = true;
 	var totalGold = 0;
 	
-	var woodcuttingLevel = 75;
+	var woodcuttingLevel = 1;
 	var totalWoodcuttingExp = 0;
 	var nextWoodcuttingLevel = 83;
 	var remainingWoodcutLevelExp = 83;
 	
-	var miningLevel = 70;
+	var miningLevel = 1;
 	var totalMiningExp = 0;
 	var nextMiningLevel = 83;
 	var remainingMiningLevelExp = 83;
 	
-	var fishingLevel = 96;
+	var fishingLevel = 1;
 	var totalFishingExp = 0;
 	var nextFishingLevel = 83;
 	var remainingFishingLevelExp = 83;
 	
-	var craftingLevel = 40;
+	var craftingLevel = 1;
 	var totalCraftingExp = 0;
 	var nextCraftingLevel = 83;
 	var remainingCraftingLevelExp = 83;
@@ -1012,7 +1013,7 @@ body{
 			}
 			document.getElementById("treeButton").style.backgroundColor = 'red';
 			document.getElementById("treeButton").disabled = true;
-			logDelay = ((Math.random() + .18) * (9950 - (woodcuttingLevel * 89))) + (125 - woodcuttingLevel);
+			logDelay = ((Math.random() + .2) * (9900 - (woodcuttingLevel * 75))) + (125 - woodcuttingLevel);
 			setTimeout(function(){
 				totalLogs += 1;
 				totalWoodcuttingExp += normalTree;
@@ -1031,7 +1032,7 @@ body{
 			}
 			document.getElementById("oakButton").style.backgroundColor = 'red';
 			document.getElementById("oakButton").disabled = true;
-			oakDelay = ((Math.random() + .24) * (9950 - (woodcuttingLevel * 87))) + (220 - woodcuttingLevel);
+			oakDelay = ((Math.random() + .25) * (10000 - (woodcuttingLevel * 75))) + (220 - woodcuttingLevel);
 			setTimeout(function(){
 				totalOak += 1;
 				totalWoodcuttingExp += oakTree;
@@ -1050,7 +1051,7 @@ body{
 			}
 			document.getElementById("willowButton").style.backgroundColor = 'red';
 			document.getElementById("willowButton").disabled = true;
-			willowDelay = ((Math.random() + .25) * (13200 - (woodcuttingLevel * 85))) + (225 - woodcuttingLevel);
+			willowDelay = ((Math.random() + .25) * (13000 - (woodcuttingLevel * 75))) + (225 - woodcuttingLevel);
 			setTimeout(function(){
 				totalWillow += 1;
 				totalWoodcuttingExp += willowTree;
@@ -1069,7 +1070,7 @@ body{
 			}
 			document.getElementById("mapleButton").style.backgroundColor = 'red';
 			document.getElementById("mapleButton").disabled = true;
-			mapleDelay = ((Math.random() + .3) * (16300 - (woodcuttingLevel * 80))) + (450 - woodcuttingLevel);
+			mapleDelay = ((Math.random() + .3) * (16000 - (woodcuttingLevel * 75))) + (450 - woodcuttingLevel);
 			setTimeout(function(){
 				totalMaple += 1;
 				totalWoodcuttingExp += mapleTree;
@@ -1088,7 +1089,7 @@ body{
 			}
 			document.getElementById("yewButton").style.backgroundColor = 'red';
 			document.getElementById("yewButton").disabled = true;
-			yewDelay = ((Math.random() + .4) * (21400 - (woodcuttingLevel * 76))) + (675 - woodcuttingLevel);
+			yewDelay = ((Math.random() + .4) * (21000 - (woodcuttingLevel * 100))) + (675 - woodcuttingLevel);
 			setTimeout(function(){
 				totalYew += 1;
 				totalWoodcuttingExp += yewTree;
@@ -1107,7 +1108,7 @@ body{
 			}
 			document.getElementById("magicButton").style.backgroundColor = 'red';
 			document.getElementById("magicButton").disabled = true;
-			magicDelay = ((Math.random() + .55) * (26000 - (woodcuttingLevel * 70))) + (875 - woodcuttingLevel);
+			magicDelay = ((Math.random() + .55) * (24000 - (woodcuttingLevel * 100))) + (875 - woodcuttingLevel);
 			setTimeout(function(){
 				totalMagic += 1;
 				totalWoodcuttingExp += magicTree;
@@ -2626,6 +2627,56 @@ body{
 		document.getElementById("dragonButton").style.backgroundColor = "black";
 	}
 	
+	//TODO
+	function craft(obj){
+		if(obj.id == "BronzeAxe"){
+			if(totalLogs > 15 && totalGold > 25) bronzeAxe += 1;
+			else{
+				document.getElementById("AxeText").innerHTML = "You need 15 logs and 25 gold to buy the Bronze Axe";
+				setTimeout(function(){CraftText("AxeText")}, 5000);
+			}
+		}
+		else if(obj.id == "IronAxe"){
+			if(totalOak > 50 && totalGold > 100) ironAxe += 1;
+			else{
+				document.getElementById("AxeText").innerHTML = "You need 50 oak logs and 100 gold to buy the Iron Axe";
+				setTimeout(function(){CraftText("AxeText")}, 5000);
+			}
+		}
+		else if(obj.id == "SteelAxe"){
+			if(totalOak > 100 && totalGold > 500) steelAxe += 1;
+			else{
+				document.getElementById("AxeText").innerHTML = "You need 100 oak logs and 500 gold to buy the Steel Axe";
+				setTimeout(function(){CraftText("AxeText")}, 5000);
+			}
+		}
+		else if(obj.id == "MithrilAxe"){
+			if(totalWillow > 250 && totalGold > 5000) mithrilAxe += 1;
+			else{
+				document.getElementById("AxeText").innerHTML = "You need 250 willow logs and 5000 gold to buy the Mithril Axe";
+				setTimeout(function(){CraftText("AxeText")}, 5000);
+			}
+		}
+		else if(obj.id == "AdamantAxe"){
+			if(totalMaple > 500 && totalGold > 25000) adamantiteAxe += 1;
+			else{
+				document.getElementById("AxeText").innerHTML = "You need 500 maple logs and 25000 gold to buy the Adamant Axe";
+				setTimeout(function(){CraftText("AxeText")}, 5000);
+			}
+		}
+		else if(obj.id == "RuneAxe"){
+			if(totalYew > 1000 && totalGold > 100000) steelAxe += 1;
+			else{
+				document.getElementById("AxeText").innerHTML = "You need 1000 yew logs and 100000 gold to buy the Rune Axe";
+				setTimeout(function(){CraftText("AxeText")}, 5000);
+			}
+		}
+	}
+	
+	function CraftText(id){
+		document.getElementById(id).innerHTML = "";
+	}
+	
 	function save(){
 		document.cookie = "totalGoldC=" + totalGold;
 		document.cookie = "remainingWoodcutLevelExpC=" + remainingWoodcutLevelExp;
@@ -2723,7 +2774,7 @@ body{
 		totalYew = parseInt(getCookie("totalYewC"));
 		totalMagic = parseInt(getCookie("totalMagicC"));
 		
-		totalMiningExp = parseFloat(getCooke("totalMiningExpC"));
+		totalMiningExp = parseFloat(getCookie("totalMiningExpC"));
 		totalCopper = parseInt(getCookie("totalCopperC"));
 		totalTin = parseInt(getCookie("totalTinC"));
 		totalIron = parseInt(getCookie("totalIronC"));
@@ -2741,12 +2792,12 @@ body{
 		totalSwordfish = parseInt(getCookie("totalSwordfishC"));
 		totalShark = parseInt(getCookie("totalSharkC"));
 		
-		numLoggers = parseInt(getCooke("numLoggersC"));
-		numOakLoggers = parseInt(getCooke("numOakLoggersC"));
-		numWillowLoggers = parseInt(getCooke("numWillowLoggersC"));
-		numMapleLoggers = parseInt(getCooke("numMapleLoggersC"));
-		numYewLoggers = parseInt(getCooke("numYewLoggersC"));
-		numMagicLoggers = parseInt(getCooke("numMagicLoggersC"));
+		numLoggers = parseInt(getCookie("numLoggersC"));
+		numOakLoggers = parseInt(getCookie("numOakLoggersC"));
+		numWillowLoggers = parseInt(getCookie("numWillowLoggersC"));
+		numMapleLoggers = parseInt(getCookie("numMapleLoggersC"));
+		numYewLoggers = parseInt(getCookie("numYewLoggersC"));
+		numMagicLoggers = parseInt(getCookie("numMagicLoggersC"));
 		
 		numCopperMiners = parseInt(getCookie("numCopperMinersC"));
 		numTinMiners = parseInt(getCookie("numTinMinersC"));
@@ -3254,119 +3305,120 @@ body{
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp; Woodcutting Axes</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze Axe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron Axe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel Axe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril Axe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant Axe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune Axe</p></button><br>
+			<button class="craftingButtons" id="BronzeAxe" onclick="craft(this)"><p>Bronze Axe</p></button><br>
+			<button class="craftingButtons" id="IronAxe" onclick="craft(this)"><p>Iron Axe</p></button><br>
+			<button class="craftingButtons" id="SteelAxe"onclick="craft(this)"><p>Steel Axe</p></button><br>
+			<button class="craftingButtons" id="MithrilAxe" onclick="craft(this)"><p>Mithril Axe</p></button><br>
+			<button class="craftingButtons" id="AdamantAxe" onclick="craft(this)"><p>Adamant Axe</p></button><br>
+			<button class="craftingButtons" id="RuneAxe" onclick="craft(this)"><p>Rune Axe</p></button><br>
+			<div id="AxeText"></div>
 			<h4>&nbsp;&nbsp; Sapphire Jewlery</h4>
-			<button class="craftingButtons" disabled="true"><p>Sapphire Ring</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Sapphire Necklace</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Sapphire Amulet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Sapphire Bracelet</p></button><br>
+			<button class="craftingButtons" id="SapphireRing" onclick="craft(this)"><p>Sapphire Ring</p></button><br>
+			<button class="craftingButtons" id="SapphireNecklace" onclick="craft(this)"><p>Sapphire Necklace</p></button><br>
+			<button class="craftingButtons" id="SapphireAmulet" onclick="craft(this)"><p>Sapphire Amulet</p></button><br>
+			<button class="craftingButtons" id="SapphireBracelet" onclick="craft(this)"><p>Sapphire Bracelet</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp; Mining Pickaxes</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze Pickaxe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron Pickaxe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel Pickaxe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril Pickaxe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant Pickaxe</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune Pickaxe</p></button><br>
+			<button class="craftingButtons"  id="BronzePickaxe" onclick="craft(this)"><p>Bronze Pickaxe</p></button><br>
+			<button class="craftingButtons"  id="IronPickaxe" onclick="craft(this)"><p>Iron Pickaxe</p></button><br>
+			<button class="craftingButtons"  id="SteelPickaxe" onclick="craft(this)"><p>Steel Pickaxe</p></button><br>
+			<button class="craftingButtons"  id="MithrilPickaxe" onclick="craft(this)"><p>Mithril Pickaxe</p></button><br>
+			<button class="craftingButtons"  id="AdamantPickaxe" onclick="craft(this)"><p>Adamant Pickaxe</p></button><br>
+			<button class="craftingButtons"  id="RunePickaxe" onclick="craft(this)"><p>Rune Pickaxe</p></button><br>
 			<h4>&nbsp;&nbsp; Emerald Jewlery</h4>
-			<button class="craftingButtons" disabled="true"><p>Emerald Ring</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Emerald Necklace</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Emerald Amulet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Emerald Bracelet</p></button><br>
+			<button class="craftingButtons"  id="EmeraldRing" onclick="craft(this)"><p>Emerald Ring</p></button><br>
+			<button class="craftingButtons"  id="EmeraldNecklace" onclick="craft(this)"><p>Emerald Necklace</p></button><br>
+			<button class="craftingButtons"  id="EmeraldAmulet" onclick="craft(this)"><p>Emerald Amulet</p></button><br>
+			<button class="craftingButtons"  id="EmeraldBracelet" onclick="craft(this)"><p>Emerald Bracelet</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp; Fishing Rods</h4>
-			<button class="craftingButtons" disabled="true"><p>Net</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Fishing Rod</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Fly Fishing Rod</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Big Net</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Lobster Pot</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Harpoon</p></button><br>
+			<button class="craftingButtons"  id="Net" onclick="craft(this)"><p>Net</p></button><br>
+			<button class="craftingButtons"  id="FishingRod" onclick="craft(this)"><p>Fishing Rod</p></button><br>
+			<button class="craftingButtons"  id="FlyFishingRod" onclick="craft(this)"><p>Fly Fishing Rod</p></button><br>
+			<button class="craftingButtons"  id="BigNet" onclick="craft(this)"><p>Big Net</p></button><br>
+			<button class="craftingButtons"  id="LobsterPot" onclick="craft(this)"><p>Lobster Pot</p></button><br>
+			<button class="craftingButtons"  id="Harpoon" onclick="craft(this)"><p>Harpoon</p></button><br>
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ruby Jewlery</h4>
-			<button class="craftingButtons" disabled="true"><p>Ruby Ring</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Ruby Necklace</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Ruby Amulet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Ruby Bracelet</p></button><br>
+			<button class="craftingButtons"  id="RubyRing" onclick="craft(this)"><p>Ruby Ring</p></button><br>
+			<button class="craftingButtons"  id="RubyNecklace" onclick="craft(this)"><p>Ruby Necklace</p></button><br>
+			<button class="craftingButtons"  id="RubyAmulet" onclick="craft(this)"><p>Ruby Amulet</p></button><br>
+			<button class="craftingButtons"  id="RubyBracelet" onclick="craft(this)"><p>Ruby Bracelet</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Swords</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune Sword</p></button><br>
+			<button class="craftingButtons"  id="BronzeSword" onclick="craft(this)"><p>Bronze Sword</p></button><br>
+			<button class="craftingButtons"  id="IronSword" onclick="craft(this)"><p>Iron Sword</p></button><br>
+			<button class="craftingButtons"  id="SteelSword" onclick="craft(this)"><p>Steel Sword</p></button><br>
+			<button class="craftingButtons"  id="MithrilSword" onclick="craft(this)"><p>Mithril Sword</p></button><br>
+			<button class="craftingButtons"  id="AdamantSword" onclick="craft(this)"><p>Adamant Sword</p></button><br>
+			<button class="craftingButtons"  id="RuneSword" onclick="craft(this)"><p>Rune Sword</p></button><br>
 			<h4>&nbsp;&nbsp; Diamond Jewlery</h4>
-			<button class="craftingButtons" disabled="true"><p>Diamond Ring</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Diamond Necklace</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Diamond Amulet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Diamond Bracelet</p></button><br>
+			<button class="craftingButtons"  id="DiamondRing" onclick="craft(this)"><p>Diamond Ring</p></button><br>
+			<button class="craftingButtons"  id="DiamondNecklace" onclick="craft(this)"><p>Diamond Necklace</p></button><br>
+			<button class="craftingButtons"  id="DiamondAmulet" onclick="craft(this)"><p>Diamond Amulet</p></button><br>
+			<button class="craftingButtons"  id="DiamondBracelet" onclick="craft(this)"><p>Diamond Bracelet</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scimitars</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze Scimitar</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron Scimitar</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel Scimitar</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril Scimitar</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant Scimitar</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune Scimitar</p></button><br>
+			<button class="craftingButtons"  id="BronzeScimitar" onclick="craft(this)"><p>Bronze Scimitar</p></button><br>
+			<button class="craftingButtons"  id="IronScimitar" onclick="craft(this)"><p>Iron Scimitar</p></button><br>
+			<button class="craftingButtons"  id="SteelScimitar" onclick="craft(this)"><p>Steel Scimitar</p></button><br>
+			<button class="craftingButtons"  id="MithrilScimitar" onclick="craft(this)"><p>Mithril Scimitar</p></button><br>
+			<button class="craftingButtons"  id="AdamantScimitar" onclick="craft(this)"><p>Adamant Scimitar</p></button><br>
+			<button class="craftingButtons"  id="RuneScimitar" onclick="craft(this)"><p>Rune Scimitar</p></button><br>
 			<h4>Dragonstone Jewlery</h4>
-			<button class="craftingButtons" disabled="true"><p>Dragonstone Ring</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Dragonstone Necklace</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Dragonstone Amulet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Dragonstone Bracelet</p></button><br>
+			<button class="craftingButtons"  id="DragonstoneRing" onclick="craft(this)"><p>Dragonstone Ring</p></button><br>
+			<button class="craftingButtons"  id="DragonstoneNecklace" onclick="craft(this)"><p>Dragonstone Necklace</p></button><br>
+			<button class="craftingButtons"  id="DragonstoneAmulet" onclick="craft(this)"><p>Dragonstone Amulet</p></button><br>
+			<button class="craftingButtons"  id="DragonstoneBracelet" onclick="craft(this)"><p>Dragonstone Bracelet</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Two-Handed</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze 2h-Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron 2h-Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel 2h-Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril 2h-Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant 2h-Sword</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune 2h-Sword</p></button><br>
+			<button class="craftingButtons"  id="Bronze2h" onclick="craft(this)"><p>Bronze 2h-Sword</p></button><br>
+			<button class="craftingButtons"  id="Iron2h" onclick="craft(this)"><p>Iron 2h-Sword</p></button><br>
+			<button class="craftingButtons"  id="Steel2h" onclick="craft(this)"><p>Steel 2h-Sword</p></button><br>
+			<button class="craftingButtons"  id="Mithril2h" onclick="craft(this)"><p>Mithril 2h-Sword</p></button><br>
+			<button class="craftingButtons"  id="Adamant2h" onclick="craft(this)"><p>Adamant 2h-Sword</p></button><br>
+			<button class="craftingButtons"  id="Rune2h" onclick="craft(this)"><p>Rune 2h-Sword</p></button><br>
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Onyx Jewlery</h4>
-			<button class="craftingButtons" disabled="true"><p>Onyx Ring</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Onyx Necklace</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Onyx Amulet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Onyx Bracelet</p></button><br>
+			<button class="craftingButtons"  id="OnyxRing" onclick="craft(this)"><p>Onyx Ring</p></button><br>
+			<button class="craftingButtons"  id="OnyxNecklace" onclick="craft(this)"><p>Onyx Necklace</p></button><br>
+			<button class="craftingButtons"  id="OnyxAmulet" onclick="craft(this)"><p>Onyx Amulet</p></button><br>
+			<button class="craftingButtons"  id="OnyxBracelet" onclick="craft(this)"><p>Onyx Bracelet</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Helmets</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze Helmet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron Helmet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel Helmet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril Helmet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant Helmet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune Helmet</p></button><br>
+			<button class="craftingButtons"  id="BronzeHelmet" onclick="craft(this)"><p>Bronze Helmet</p></button><br>
+			<button class="craftingButtons"  id="IronHelmet" onclick="craft(this)"><p>Iron Helmet</p></button><br>
+			<button class="craftingButtons"  id="SteelHelmet" onclick="craft(this)"><p>Steel Helmet</p></button><br>
+			<button class="craftingButtons"  id="MithrilHelmet" onclick="craft(this)"><p>Mithril Helmet</p></button><br>
+			<button class="craftingButtons"  id="AdamantHelmet" onclick="craft(this)"><p>Adamant Helmet</p></button><br>
+			<button class="craftingButtons"  id="RuneHelmet" onclick="craft(this)"><p>Rune Helmet</p></button><br>
 			<h4>&nbsp;&nbsp; Zenyte Jewlery</h4>
-			<button class="craftingButtons" disabled="true"><p>Zenyte Ring</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Zenyte Necklace</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Zenyte Amulet</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Zenyte Bracelet</p></button><br>
+			<button class="craftingButtons"  id="ZenyteRing" onclick="craft(this)"><p>Zenyte Ring</p></button><br>
+			<button class="craftingButtons"  id="ZenyteNecklace" onclick="craft(this)"><p>Zenyte Necklace</p></button><br>
+			<button class="craftingButtons"  id="ZenyteAmulet" onclick="craft(this)"><p>Zenyte Amulet</p></button><br>
+			<button class="craftingButtons"  id="ZenyteBracelet" onclick="craft(this)"><p>Zenyte Bracelet</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Platebody</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze Platebody</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron Platebody</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel Platebody</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril Platebody</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant Platebody</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune Platebody</p></button><br>
+			<button class="craftingButtons"  id="BronzePlatebody" onclick="craft(this)"><p>Bronze Platebody</p></button><br>
+			<button class="craftingButtons"  id="IronPlatebody" onclick="craft(this)"><p>Iron Platebody</p></button><br>
+			<button class="craftingButtons"  id="SteelPlatebody" onclick="craft(this)"><p>Steel Platebody</p></button><br>
+			<button class="craftingButtons"  id="MithrilPlatebody" onclick="craft(this)"><p>Mithril Platebody</p></button><br>
+			<button class="craftingButtons"  id="AdamantPlatebody" onclick="craft(this)"><p>Adamant Platebody</p></button><br>
+			<button class="craftingButtons"  id="RunePlatebody" onclick="craft(this)"><p>Rune Platebody</p></button><br>
 		</div>
 		<div class="wrapperCrafts">
 			<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Platelegs</h4>
-			<button class="craftingButtons" disabled="true"><p>Bronze Platelegs</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Iron Platelegs</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Steel Platelegs</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Mithril Platelegs</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Adamant Platelegs</p></button><br>
-			<button class="craftingButtons" disabled="true"><p>Rune Platelegs</p></button><br>
+			<button class="craftingButtons"  id="BronzePlatelegs" onclick="craft(this)"><p>Bronze Platelegs</p></button><br>
+			<button class="craftingButtons"  id="IronPlatelegs" onclick="craft(this)"><p>Iron Platelegs</p></button><br>
+			<button class="craftingButtons"  id="SteelPlatebody" onclick="craft(this)"><p>Steel Platelegs</p></button><br>
+			<button class="craftingButtons"  id="MithrilPlatebody" onclick="craft(this)"><p>Mithril Platelegs</p></button><br>
+			<button class="craftingButtons"  id="AdamantPlatebody" onclick="craft(this)"><p>Adamant Platelegs</p></button><br>
+			<button class="craftingButtons"  id="RunePlatebody" onclick="craft(this)"><p>Rune Platelegs</p></button><br>
 		</div>
 	</div>
 	
