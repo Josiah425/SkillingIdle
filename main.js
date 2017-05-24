@@ -9,6 +9,7 @@ backgroundSound.play();
 soundWood.loop = true;
 var totalGold = 0;
 
+//levels and experience
 var woodcuttingLevel = 1;
 var totalWoodcuttingExp = 0;
 var nextWoodcuttingLevel = 83;
@@ -30,55 +31,28 @@ var nextCraftingLevel = 83;
 var remainingCraftingLevelExp = 83;
 
 //Woodcut
-var totalLogs = 0;
-var totalOak = 0;
-var totalWillow = 0;
-var totalMaple = 0;
-var totalYew = 0;
-var totalMagic = 0;
+var totalLogs = [0, 0, 0, 0, 0, 0];
 
-var normalTree = 25;
-var oakTree = 37.5;
-var willowTree = 67.5;
-var mapleTree = 90;
-var yewTree = 175;
-var magicTree = 250;
+var treeXP = [25, 37.5, 67.5, 90, 175, 250];
+
 var prestige = 0;
 
-var logVal = 1;
-var oakLogVal = 15;
-var willowLogVal = 35;
-var mapleLogVal = 80;
-var yewLogVal = 400;
-var magicLogVal = 1250;
+var logVals = [1, 15, 35, 80, 400, 1250];
 
-var logDelay;
-var oakDelay;
-var willowDelay;
-var mapleDelay;
-var yewDelay;
-var magicDelay;
+var logDelayOffset = [9900,10000, 13000, 16000, 21000, 24000];
+var logDifficulty = [125, 220, 225, 450, 675, 875];
 
-var loggerHired = false;
-var oakLoggerHired = false;
-var willowLoggerHired = false;
-var mapleLoggerHired = false;
-var yewLoggerHired = false;
-var magicLoggerHired = false;
+var isLoggerHired = [false, false, false, false, false, false];
+var loggerVals = [1000, 15000, 40000, 160000, 450000, 800000];
+var numLoggers = [0, 0, 0, 0, 0, 0];
+var loggerCostIncrease = [100, 1000, 5000, 10000, 20000, 50000];
 
-var loggerVal = 1000;
-var oakLoggerVal = 15000;
-var willowLoggerVal = 40000;
-var mapleLoggerVal = 160000;
-var yewLoggerVal = 450000;
-var magicLoggerVal = 800000;
+var loggerAbility = [.85, .95, 1.1, 1.2, 1.4, 1.45];
+var loggerDelay = [17960, 19850, 23000, 30000, 36000, 44000];
+var loggerTime = [725, 800, 1000, 1150, 1550, 2400];
+var loggerWoodcutMul = [16, 16, 16, 15, 13, 11]
 
-var numLoggers = 0;
-var numOakLoggers = 0;
-var numWillowLoggers = 0;
-var numMapleLoggers = 0;
-var numYewLoggers = 0;
-var numMagicLoggers = 0;
+
 
 //Mining
 var totalCopper = 0;
@@ -325,6 +299,37 @@ var craftingArea = "none";
 var woodcuttingArea = "block";
 
 var logIndex;
+
+function disableButton(buttonID) {
+	document.getElementById(buttonID).style.backgroundColor = 'red';
+	document.getElementById(buttonID).disabled = true;
+	
+}
+//this is important! Don't fuck with it.
+//returns an array of element ids for that tree tier. Allows reduction of code duplication
+function getWoodcutButtonIDs(treeIndex) {
+	if(treeIndex == 0) {
+		return["treeButton", "loggerButton", "sellLogButton", "logs"];
+	}
+	else if (treeIndex == 1) {
+		return["oakButton", "oakLoggerButton", "sellOakButton", "oak"];
+	}
+	else if (treeIndex == 2) {
+		return["willowButton", "willowLoggerButton", "sellWillowButton","willow"];
+	}
+	else if (treeIndex == 3){
+		return["mapleButton", "mapleLoggerButton", "sellMapleButton", "maple"];
+	}
+	else if (treeIndex == 4) {
+		return["yewButton", "yewLoggerButton", "sellYewButton", "yew"];
+	}
+	else if(treeIndex == 5) {
+		return["magicButton", "magicLoggerButton", "sellMagicButton", "magic"];
+	}
+	else {
+		console.log("Failure. Check call of getWoodcutButtonIDs. treeIndex =" + treeIndex);
+	}
+}
 
 function start(){
 	updatePrice();
@@ -663,123 +668,50 @@ function updateMiningButtons(){
 	}
 }
 
+function canBuyLogger(logIndex, levelRequired) { 
+	return ((totalGold >= loggerVals[logIndex] && (numLoggers[i] < (woodcuttingLevel - levelRequired) ))&& (woodcuttingLevel >= levelRequired)) 
+	
+}
+
 function updateWoodcutButtons(){
-	if(totalLogs > 0){
-		document.getElementById("sellLogButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellLogButton").disabled = true;
-	}
-	if(totalOak > 0){
-		document.getElementById("sellOakButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellOakButton").disabled = true;
-	}
-	if(totalWillow > 0){
-		document.getElementById("sellWillowButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellWillowButton").disabled = true;
-	}
-	if(totalMaple > 0){
-		document.getElementById("sellMapleButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellMapleButton").disabled = true;
-	}
-	if(totalYew > 0){
-		document.getElementById("sellYewButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellYewButton").disabled = true;
-	}
-	if(totalMagic > 0){
-		document.getElementById("sellMagicButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellMagicButton").disabled = true;
-	}
-	if(totalGold >= loggerVal && numLoggers < woodcuttingLevel){
-		document.getElementById("loggerButton").disabled = false;
-	}
-	else{
-		document.getElementById("loggerButton").disabled = true;
-	}
-	if(totalGold >= oakLoggerVal && numOakLoggers < (woodcuttingLevel - 15) && woodcuttingLevel >= 15){
-		document.getElementById("oakLoggerButton").disabled = false;
-	}
-	else{
-		document.getElementById("oakLoggerButton").disabled = true;
-	}
-	if(totalGold >= willowLoggerVal && numWillowLoggers < (woodcuttingLevel - 30) && woodcuttingLevel >= 30){
-		document.getElementById("willowLoggerButton").disabled = false;
-	}
-	else{
-		document.getElementById("willowLoggerButton").disabled = true;
-	}
-	if(totalGold >= mapleLoggerVal && numMapleLoggers < (woodcuttingLevel - 45) && woodcuttingLevel >= 45){
-		document.getElementById("mapleLoggerButton").disabled = false;
-	}
-	else{
-		document.getElementById("mapleLoggerButton").disabled = true;
-	}
-	if(totalGold >= yewLoggerVal && numYewLoggers < (woodcuttingLevel - 60) && woodcuttingLevel >= 60){
-		document.getElementById("yewLoggerButton").disabled = false;
-	}
-	else{
-		document.getElementById("yewLoggerButton").disabled = true;
-	}
-	if(totalGold >= magicLoggerVal && numMagicLoggers < (woodcuttingLevel - 75) && woodcuttingLevel >= 75){
-		document.getElementById("magicLoggerButton").disabled = false;
-	}
-	else{
-		document.getElementById("magicLoggerButton").disabled = true;
-	}
-	if(woodcuttingLevel >= 15){
-		document.getElementById("oakButton").style.display = "block";
-		document.getElementById("oak").style.display = "block";
-		if(!oakLoggerHired){
-			document.getElementById("oakLoggerButton").style.display = "block";
+	var curID = [];
+	for(var i = 0; i < 6; i++) {
+		curID = getWoodcutButtonIDs(i);
+		//enable sell buttons if there are logs -- index 2 is the sell button
+		if(totalLogs[i] > 0) {
+			document.getElementById(curID[2]).disabled = false;
+		} 
+		else {
+			document.getElementById(curID[2]).disabled = true;
+		}
+		
+		//enable purchase logger buttons
+		if(canBuyLogger(i, i*15)) { //i*15 happens to be level required for each tier.
+			document.getElementById(curID[1]).disabled = false;
+		}
+		else {
+			document.getElementById(curID[1]).disabled = true;
+		}
+		
+		//display buttons based on woodcutting level
+		if((i > 0) && (woodcuttingLevel > (i*15))) { // skip first run through
+			document.getElementById(curID[0]).style.display = "block";
+			document.getElementById(curID[3]).style.display = "block";
+			if(!isLoggerHired[1]){
+				document.getElementById(cirID[1]).style.display = "block";
+			}
 		}
 	}
-	if(woodcuttingLevel >= 30){
-		document.getElementById("willowButton").style.display = "block";
-		document.getElementById("willow").style.display = "block";
-		if(!willowLoggerHired){
-			document.getElementById("willowLoggerButton").style.display = "block";
-		}
-	}
-	if(woodcuttingLevel >= 45){
-		document.getElementById("mapleButton").style.display = "block";
-		document.getElementById("maple").style.display = "block";
-		if(!mapleLoggerHired){
-			document.getElementById("mapleLoggerButton").style.display = "block";
-		}
-	}
-	if(woodcuttingLevel >= 60){
-		document.getElementById("yewButton").style.display = "block";
-		document.getElementById("yew").style.display = "block";
-		if(!yewLoggerHired){
-			document.getElementById("yewLoggerButton").style.display = "block";
-		}
-	}
-	if(woodcuttingLevel >= 75){
-		document.getElementById("magicButton").style.display = "block";
-		document.getElementById("magicTree").style.display = "block";
-		if(!magicLoggerHired){
-			document.getElementById("magicLoggerButton").style.display = "block";
-		}
-	}
+
 }
 
 function updateLogs(){
-	document.getElementById("logs").innerHTML = "Logs: " + totalLogs;
-	document.getElementById("oak").innerHTML = "Oaks: " + totalOak;
-	document.getElementById("willow").innerHTML = "Willows: " + totalWillow;
-	document.getElementById("maple").innerHTML = "Maples: " + totalMaple;
-	document.getElementById("yew").innerHTML = "Yews: " + totalYew;
-	document.getElementById("magicTree").innerHTML = "Magics: " + totalMagic;
+	var curID = [];
+	for(var i = 0; i < 6; i++){
+		curID = getWoodcutButtonIDs(i);
+		document.getElementById(curID[3]).innerHTML = curID[3]+ " :" + totalLogs[i];
+	}
+	//updates current xp as well
 	document.getElementById("woodcutExp").innerHTML = "Woodcutting Level: " + woodcuttingLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalWoodcuttingExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingWoodcutLevelExp.toLocaleString();
 }
 
@@ -830,293 +762,55 @@ function pauseTreeSound(){
 	}
 }
 
-function getTreeLogs(){
-	if(!moving){
+function getLogs(treeIndex) {
+	if(!moving) {
 		if(soundWood.paused){
-			soundWood.play();
+				soundWood.play();
 		}
-		document.getElementById("treeButton").style.backgroundColor = 'red';
-		document.getElementById("treeButton").disabled = true;
-		logDelay = ((Math.random() + .2) * (9900 - (woodcuttingLevel * 75))) + (125 - woodcuttingLevel);
+		var ids = getWoodcutButtonIDs(treeIndex);
+		document.getElementById(ids[0]).style.backgroundColor = 'red';
+		document.getElementById(ids[0]).disabled = true;
+		var logDelay = ((Math.random() + .2) * (logDelayOffset[treeIndex] - (woodcuttingLevel * 75))) + (logDifficulty[treeIndex] - woodcuttingLevel);
 		setTimeout(function(){
-			totalLogs += 1;
-			totalWoodcuttingExp += normalTree;
+			totalLogs[treeIndex] += 1;
+			totalWoodcuttingExp += treeXP[treeIndex];
 			update();
-			document.getElementById("treeButton").disabled = false;
-			document.getElementById("treeButton").style.backgroundColor = 'green';
+			document.getElementById(ids[0]).disabled = false;
+			document.getElementById(ids[0]).style.backgroundColor = 'green';
 			pauseTreeSound();
 		}, logDelay);
 	}
+	
 }
-
-function getOakLogs(){
-	if(!moving){
-		if(soundWood.paused){
-			soundWood.play();
-		}
-		document.getElementById("oakButton").style.backgroundColor = 'red';
-		document.getElementById("oakButton").disabled = true;
-		oakDelay = ((Math.random() + .25) * (10000 - (woodcuttingLevel * 75))) + (220 - woodcuttingLevel);
-		setTimeout(function(){
-			totalOak += 1;
-			totalWoodcuttingExp += oakTree;
-			update();
-			document.getElementById("oakButton").disabled = false;
-			document.getElementById("oakButton").style.backgroundColor = 'green';
-			pauseTreeSound();
-		}, oakDelay);
-	}
-}
-
-function getWillowLogs(){
-	if(!moving){
-		if(soundWood.paused){
-			soundWood.play();
-		}
-		document.getElementById("willowButton").style.backgroundColor = 'red';
-		document.getElementById("willowButton").disabled = true;
-		willowDelay = ((Math.random() + .25) * (13000 - (woodcuttingLevel * 75))) + (225 - woodcuttingLevel);
-		setTimeout(function(){
-			totalWillow += 1;
-			totalWoodcuttingExp += willowTree;
-			update();
-			document.getElementById("willowButton").disabled = false;
-			document.getElementById("willowButton").style.backgroundColor = 'green';
-			pauseTreeSound();
-		}, willowDelay);
-	}
-}
-
-function getMapleLogs(){
-	if(!moving){
-		if(soundWood.paused){
-			soundWood.play();
-		}
-		document.getElementById("mapleButton").style.backgroundColor = 'red';
-		document.getElementById("mapleButton").disabled = true;
-		mapleDelay = ((Math.random() + .3) * (16000 - (woodcuttingLevel * 75))) + (450 - woodcuttingLevel);
-		setTimeout(function(){
-			totalMaple += 1;
-			totalWoodcuttingExp += mapleTree;
-			update();
-			document.getElementById("mapleButton").disabled = false;
-			document.getElementById("mapleButton").style.backgroundColor = 'green';
-			pauseTreeSound();
-		}, mapleDelay);
-	}
-}
-
-function getYewLogs(){
-	if(!moving){
-		if(soundWood.paused){
-			soundWood.play();
-		}
-		document.getElementById("yewButton").style.backgroundColor = 'red';
-		document.getElementById("yewButton").disabled = true;
-		yewDelay = ((Math.random() + .4) * (21000 - (woodcuttingLevel * 100))) + (675 - woodcuttingLevel);
-		setTimeout(function(){
-			totalYew += 1;
-			totalWoodcuttingExp += yewTree;
-			update();
-			document.getElementById("yewButton").disabled = false;
-			document.getElementById("yewButton").style.backgroundColor = 'green';
-			pauseTreeSound();
-		}, yewDelay);
-	}
-}
-
-function getMagicLogs(){
-	if(!moving){
-		if(soundWood.paused){
-			soundWood.play();
-		}
-		document.getElementById("magicButton").style.backgroundColor = 'red';
-		document.getElementById("magicButton").disabled = true;
-		magicDelay = ((Math.random() + .55) * (24000 - (woodcuttingLevel * 100))) + (875 - woodcuttingLevel);
-		setTimeout(function(){
-			totalMagic += 1;
-			totalWoodcuttingExp += magicTree;
-			update();
-			document.getElementById("magicButton").disabled = false;
-			document.getElementById("magicButton").style.backgroundColor = 'green';
-			pauseTreeSound();
-		}, magicDelay);
-	}
-}
-
-function hireLogger(){
-	totalGold -= loggerVal;
-	numLoggers += 1;
-	loggerVal = Math.floor(loggerVal * 1.1) + 100;
+function hireLogger(treeIndex){
+	totalGold -= loggerVal[treeIndex];
+	numLoggers[treeIndex]++;
+	loggerVal = Math.floor(loggerVal[treeIndex] * 1.1) + loggerCostIncrease[treeIndex];
 	updatePrice();
 	update();
-	if(!loggerHired){
-		loggerHired = true;
-		continuousLogs();
+	if(!loggerHired[treeIndex]){
+		loggerHired[treeIndex] = true;
+		continuousLogs(treeIndex);
 	}
 }
 
-function hireOakLogger(){
-	totalGold -= oakLoggerVal;
-	numOakLoggers += 1;
-	oakLoggerVal = Math.floor(oakLoggerVal * 1.1) + 1000;
-	updatePrice();
-	update();
-	if(!oakLoggerHired){
-		oakLoggerHired = true;
-		continuousOakLogs();
-	}
-}
-
-function hireWillowLogger(){
-	totalGold -= willowLoggerVal;
-	numWillowLoggers += 1;
-	willowLoggerVal = Math.floor(willowLoggerVal * 1.1) + 5000;
-	updatePrice();
-	update();
-	if(!willowLoggerHired){
-		willowLoggerHired = true;
-		continuousWillowLogs();
-	}
-}
-
-function hireMapleLogger(){
-	totalGold -= mapleLoggerVal;
-	numMapleLoggers += 1;
-	mapleLoggerVal = Math.floor(mapleLoggerVal * 1.1) + 10000;
-	updatePrice();
-	update();
-	if(!mapleLoggerHired){
-		mapleLoggerHired = true;
-		continuousMapleLogs();
-	}
-}
-
-function hireYewLogger(){
-	totalGold -= yewLoggerVal;
-	numYewLoggers += 1;
-	yewLoggerVal = Math.floor(yewLoggerVal * 1.1) + 20000;
-	updatePrice();
-	update();
-	if(!yewLoggerHired){
-		yewLoggerHired = true;
-		continuousYewLogs();
-	}
-}
-
-function hireMagicLogger(){
-	totalGold -= magicLoggerVal;
-	numMagicLoggers += 1;
-	magicLoggerVal = Math.floor(magicLoggerVal * 1.1) + 50000;
-	updatePrice();
-	update();
-	if(!magicLoggerHired){
-		magicLoggerHired = true;
-		continuousMagicLogs();
-	}
-}
-
-function continuousLogs(){
-	logDelay = ((Math.random() + .85) * (17960 - (woodcuttingLevel * 16))) + (725 - woodcuttingLevel);
+function continuousLogs(treeIndex){
+	logDelay = ((Math.random() + loggerAbility[treeIndex]) * (loggerDelay[treeIndex] - (woodcuttingLevel * 16))) + (loggerTime[treeIndex] - woodcuttingLevel);
 	setTimeout(function(){
-		totalLogs += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers / 3)));
+		totalLogs += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers[treeIndex] / 3)));
 		update();
 		setInterval(continuousLogs(), 100);
 	}, (logDelay - (numLoggers * 270)));
 }
-
-function continuousOakLogs(){
-	oakDelay = ((Math.random() + .95) * (19850 - (woodcuttingLevel * 16))) + (800 - woodcuttingLevel);
-	setTimeout(function(){
-		totalOak += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers / 3)));
-		update();
-		setInterval(continuousOakLogs(), 100);
-	}, (oakDelay - (numOakLoggers * 265)));
-}
-
-function continuousWillowLogs(){
-	willowDelay = ((Math.random() + 1.1) * (23000 - (woodcuttingLevel * 16))) + (1000 - woodcuttingLevel);
-	setTimeout(function(){
-		totalWillow += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers / 3)));
-		update();
-		setInterval(continuousWillowLogs(), 100);
-	}, (willowDelay - (numWillowLoggers * 260)));
-}
-
-function continuousMapleLogs(){
-	mapleDelay = ((Math.random() + 1.2) * (30000 - (woodcuttingLevel * 15))) + (1150 - woodcuttingLevel);
-	setTimeout(function(){
-		totalMaple += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers / 3)));
-		update();
-		setInterval(continuousMapleLogs(), 100);
-	}, (mapleDelay - (numMapleLoggers * 255)));
-}
-
-function continuousYewLogs(){
-	yewDelay = ((Math.random() + 1.4) * (36000 - (woodcuttingLevel * 13))) + (1550 - woodcuttingLevel);
-	setTimeout(function(){
-		totalYew += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers / 3)));
-		update();
-		setInterval(continuousYewLogs(), 100);
-	}, (yewDelay - (numYewLoggers*255)));
-}
-
-function continuousMagicLogs(){
-	magicDelay = ((Math.random() + 1.45) * (44000 - (woodcuttingLevel * 11))) + (2400 - woodcuttingLevel);
-	setTimeout(function(){
-		totalMagic += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers / 3)));
-		update();
-		setInterval(continuousMagicLogs(), 100);
-	}, (magicDelay - (numMagicLoggers * 255)));
-}
-
-function sellLog(){
-	if(totalLogs > 0){
-		totalLogs -=1;
-		totalGold += logVal;
+function sellLog(treeIndex){
+	if(totalLogs[treeIndex] > 0){
+		totalLogs[treeIndex]--;
+		totalGold += logVals[treeIndex];
 		update();
 	}
 }
 
-function sellOak(){
-	if(totalOak > 0){
-		totalOak -= 1;
-		totalGold += oakLogVal;
-		update();
-	}
-}
 
-function sellWillow(){
-	if(totalWillow > 0){
-		totalWillow -= 1;
-		totalGold += willowLogVal;
-		update();
-	}
-}
-
-function sellMaple(){
-	if(totalMaple > 0){
-		totalMaple -= 1;
-		totalGold += mapleLogVal;
-		update();
-	}
-}
-
-function sellYew(){
-	if(totalYew > 0){
-		totalYew -= 1;
-		totalGold += yewLogVal;
-		update();
-	}
-}
-
-function sellMagic(){
-	if(totalMagic > 0){
-		totalMagic -= 1;
-		totalGold += magicLogVal;
-		update();
-	}
-}
 
 //Mining
 function getCopper(){
@@ -2915,12 +2609,13 @@ function updatePrice(){
 	document.getElementById("adamantiteMinerButton").innerText = "Hire Adamantite Miner: " + adamantiteMinerVal.toLocaleString();
 	document.getElementById("runiteMinerButton").innerText = "Hire Runite Miner: " + runiteMinerVal.toLocaleString();
 	
-	document.getElementById("loggerButton").innerText = "Hire Logger: " + loggerVal.toLocaleString();
-	document.getElementById("oakLoggerButton").innerText = "Hire Oak Logger: " + oakLoggerVal.toLocaleString();
-	document.getElementById("willowLoggerButton").innerText = "Hire Willow Logger: " + willowLoggerVal.toLocaleString();
-	document.getElementById("mapleLoggerButton").innerText = "Hire Maple Logger: " + mapleLoggerVal.toLocaleString();
-	document.getElementById("yewLoggerButton").innerText = "Hire Yew Logger: " + yewLoggerVal.toLocaleString();
-	document.getElementById("magicLoggerButton").innerText = "Hire Magic Logger: " + magicLoggerVal.toLocaleString();
+	//update logger price
+	var curWoodcutID = [];
+	for(var i = 0; i < 6; i++) {
+		curWoodcutID = getWoodcutButtonIDs(i);
+		document.getElementById(curWoodcutID[1]).innerText = "Hire " + curWoodcutID[3] + " Logger: " + loggerVals[i].toLocaleString();
+	}
+	
 }
 
 function changeSound(){
