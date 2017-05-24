@@ -324,7 +324,7 @@ function getWoodcutButtonIDs(treeIndex) {
 		return["yewButton", "yewLoggerButton", "sellYewButton", "yew"];
 	}
 	else if(treeIndex == 5) {
-		return["magicButton", "magicLoggerButton", "sellMagicButton", "magic"];
+		return["magicButton", "magicLoggerButton", "sellMagicButton", "magicTree"];
 	}
 	else {
 		console.log("Failure. Check call of getWoodcutButtonIDs. treeIndex =" + treeIndex);
@@ -669,8 +669,7 @@ function updateMiningButtons(){
 }
 
 function canBuyLogger(logIndex, levelRequired) { 
-	return ((totalGold >= loggerVals[logIndex] && (numLoggers[i] < (woodcuttingLevel - levelRequired) ))&& (woodcuttingLevel >= levelRequired)) 
-	
+	return ((totalGold >= loggerVals[logIndex]) && (numLoggers[logIndex] < (woodcuttingLevel - levelRequired) )&& (woodcuttingLevel >= levelRequired)) 
 }
 
 function updateWoodcutButtons(){
@@ -698,7 +697,7 @@ function updateWoodcutButtons(){
 			document.getElementById(curID[0]).style.display = "block";
 			document.getElementById(curID[3]).style.display = "block";
 			if(!isLoggerHired[1]){
-				document.getElementById(cirID[1]).style.display = "block";
+				document.getElementById(curID[1]).style.display = "block";
 			}
 		}
 	}
@@ -709,7 +708,7 @@ function updateLogs(){
 	var curID = [];
 	for(var i = 0; i < 6; i++){
 		curID = getWoodcutButtonIDs(i);
-		document.getElementById(curID[3]).innerHTML = curID[3]+ " :" + totalLogs[i];
+		document.getElementById(curID[3]).innerHTML = curID[3]+ " :" + totalLogs[i].toString();
 	}
 	//updates current xp as well
 	document.getElementById("woodcutExp").innerHTML = "Woodcutting Level: " + woodcuttingLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalWoodcuttingExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingWoodcutLevelExp.toLocaleString();
@@ -762,6 +761,7 @@ function pauseTreeSound(){
 	}
 }
 
+//Woodcutting
 function getLogs(treeIndex) {
 	if(!moving) {
 		if(soundWood.paused){
@@ -780,16 +780,16 @@ function getLogs(treeIndex) {
 			pauseTreeSound();
 		}, logDelay);
 	}
-	
 }
+
 function hireLogger(treeIndex){
-	totalGold -= loggerVal[treeIndex];
-	numLoggers[treeIndex]++;
-	loggerVal = Math.floor(loggerVal[treeIndex] * 1.1) + loggerCostIncrease[treeIndex];
+	totalGold -= loggerVals[treeIndex];
+	numLoggers[treeIndex] += 1;
+	loggerVals[treeIndex] = Math.floor(loggerVals[treeIndex] * 1.1) + loggerCostIncrease[treeIndex];
 	updatePrice();
 	update();
-	if(!loggerHired[treeIndex]){
-		loggerHired[treeIndex] = true;
+	if(!isLoggerHired[treeIndex]){
+		isLoggerHired[treeIndex] = true;
 		continuousLogs(treeIndex);
 	}
 }
@@ -797,19 +797,18 @@ function hireLogger(treeIndex){
 function continuousLogs(treeIndex){
 	logDelay = ((Math.random() + loggerAbility[treeIndex]) * (loggerDelay[treeIndex] - (woodcuttingLevel * 16))) + (loggerTime[treeIndex] - woodcuttingLevel);
 	setTimeout(function(){
-		totalLogs += Math.ceil(Math.random() * Math.ceil(1 * (numLoggers[treeIndex] / 3)));
+		totalLogs[treeIndex] = totalLogs[treeIndex] + (Math.ceil(Math.random() * Math.ceil(1 * (numLoggers[treeIndex] / 3))));
 		update();
-		setInterval(continuousLogs(), 100);
-	}, (logDelay - (numLoggers * 270)));
+		setInterval(continuousLogs(treeIndex), 100);
+	}, (logDelay - (numLoggers[treeIndex] * 270)));
 }
 function sellLog(treeIndex){
 	if(totalLogs[treeIndex] > 0){
-		totalLogs[treeIndex]--;
+		totalLogs[treeIndex]-= 1;
 		totalGold += logVals[treeIndex];
 		update();
 	}
 }
-
 
 
 //Mining
@@ -1691,7 +1690,7 @@ function demonLoot(){
 			document.getElementById("combatText").innerHTML = "You loot a ruby";
 		}
 		else if(roll >= 70 && roll < 80){
-			totalMagic += 1;
+			totalLogs[5] += 1;
 			document.getElementById("combatText").innerHTML = "You loot a magic log";
 		}
 		else if(roll >= 80 && roll < 100){
@@ -1699,7 +1698,7 @@ function demonLoot(){
 			document.getElementById("combatText").innerHTML = "You loot a mithril ore";
 		}
 		else if(roll >= 100 && roll < 110){
-			totalYew += 3;
+			totalLogs[4] += 3;
 			document.getElementById("combatText").innerHTML = "You loot 3 yew logs";
 		}
 		else if(roll >= 110 && roll < 130){
@@ -1719,7 +1718,7 @@ function demonLoot(){
 			document.getElementById("combatText").innerHTML = "You loot a diamond";
 		}
 		else if(roll >= 150 && roll < 200){
-			totalOak += 15;
+			totalLogs[1] += 15;
 			document.getElementById("combatText").innerHTML = "You loot 15 oak logs";
 		}
 		else if(roll >= 200 && roll < 220){
@@ -1985,13 +1984,13 @@ function attackEnemy(){
 }
 
 function getLoss(){
-	document.getElementById("loss").innerHTML = "You lost: " + totalLogs + " Logs<br>" + "You lost: " + totalOak + " Oak Logs<br>" + "You lost: " + totalWillow + " Willow Logs<br>" + "You lost: " + totalMaple + " Maple Logs<br>" + "You lost: " + totalYew + " Yew Logs<br>" + "You lost: " + totalMagic + " Magic Logs<br>" + "You lost: " + totalCopper + " Copper Ores<br>" + "You lost: " + totalTin + " Tin Ores<br>" + "You lost: " + totalIron + " Iron Ores<br>" + "You lost: " + totalCoal + " Coal<br>" + "You lost: " + totalMithril + " Mithril Ores<br>" + "You lost: " + totalAdamantite + " Adamantite Ores<br>" + "You lost: " + totalRunite + " Runite Ores<br>" + "You lost: " + totalShrimp + " Shrimp<br>" + "You lost: " + totalTrout + " Trout<br>" + "You lost: " + totalSalmon + " Salmon<br>" + "You lost: " + totalTuna + " Tuna<br>" + "You lost: " + totalLobster + " Lobsters<br>" + "You lost: " + totalSwordfish + " Swordfish<br>" + "You lost: " + totalShark + " Sharks<br>" + "You lost: All your equipment";
-	totalLogs = 0;
-	totalOak = 0;
-	totalWillow = 0;
-	totalMaple = 0;
-	totalYew = 0;
-	totalMagic = 0;
+	document.getElementById("loss").innerHTML = "You lost: " + totalLogs[0].toString() + " Logs<br>" + "You lost: " +  totalLogs[1] + " Oak Logs<br>" + "You lost: " +  totalLogs[2] + " Willow Logs<br>" + "You lost: " +  totalLogs[3] + " Maple Logs<br>" + "You lost: " +  totalLogs[4] + " Yew Logs<br>" + "You lost: " + totalLogs[5] + " Magic Logs<br>" + "You lost: " + totalCopper + " Copper Ores<br>" + "You lost: " + totalTin + " Tin Ores<br>" + "You lost: " + totalIron + " Iron Ores<br>" + "You lost: " + totalCoal + " Coal<br>" + "You lost: " + totalMithril + " Mithril Ores<br>" + "You lost: " + totalAdamantite + " Adamantite Ores<br>" + "You lost: " + totalRunite + " Runite Ores<br>" + "You lost: " + totalShrimp + " Shrimp<br>" + "You lost: " + totalTrout + " Trout<br>" + "You lost: " + totalSalmon + " Salmon<br>" + "You lost: " + totalTuna + " Tuna<br>" + "You lost: " + totalLobster + " Lobsters<br>" + "You lost: " + totalSwordfish + " Swordfish<br>" + "You lost: " + totalShark + " Sharks<br>" + "You lost: All your equipment";
+	totalLogs[0] = 0;
+	totalLogs[1] = 0;
+	totalLogs[2] = 0;
+	totalLogs[3] = 0;
+	totalLogs[4] = 0;
+	totalLogs[5] = 0;
 	
 	totalCopper = 0;
 	totalTin = 0;
@@ -2148,42 +2147,42 @@ function enableCombatButtons(){
 //TODO
 function craft(obj){
 	if(obj.id == "BronzeAxe"){
-		if(totalLogs > 15 && totalGold > 25) bronzeAxe += 1;
+		if(totalLogs[0] > 15 && totalGold > 25) bronzeAxe += 1;
 		else{
 			document.getElementById("AxeText").innerHTML = "You need 15 logs and 25 gold to buy the Bronze Axe";
 			setTimeout(function(){CraftText("AxeText")}, 5000);
 		}
 	}
 	else if(obj.id == "IronAxe"){
-		if(totalOak > 50 && totalGold > 100) ironAxe += 1;
+		if(totalLogs[1] > 50 && totalGold > 100) ironAxe += 1;
 		else{
 			document.getElementById("AxeText").innerHTML = "You need 50 oak logs and 100 gold to buy the Iron Axe";
 			setTimeout(function(){CraftText("AxeText")}, 5000);
 		}
 	}
 	else if(obj.id == "SteelAxe"){
-		if(totalOak > 100 && totalGold > 500) steelAxe += 1;
+		if(totalLogs[1] && totalGold > 500) steelAxe += 1;
 		else{
 			document.getElementById("AxeText").innerHTML = "You need 100 oak logs and 500 gold to buy the Steel Axe";
 			setTimeout(function(){CraftText("AxeText")}, 5000);
 		}
 	}
 	else if(obj.id == "MithrilAxe"){
-		if(totalWillow > 250 && totalGold > 5000) mithrilAxe += 1;
+		if(totalLogs[2] > 250 && totalGold > 5000) mithrilAxe += 1;
 		else{
 			document.getElementById("AxeText").innerHTML = "You need 250 willow logs and 5000 gold to buy the Mithril Axe";
 			setTimeout(function(){CraftText("AxeText")}, 5000);
 		}
 	}
 	else if(obj.id == "AdamantAxe"){
-		if(totalMaple > 500 && totalGold > 25000) adamantiteAxe += 1;
+		if(totalLogs[3] > 500 && totalGold > 25000) adamantiteAxe += 1;
 		else{
 			document.getElementById("AxeText").innerHTML = "You need 500 maple logs and 25000 gold to buy the Adamant Axe";
 			setTimeout(function(){CraftText("AxeText")}, 5000);
 		}
 	}
 	else if(obj.id == "RuneAxe"){
-		if(totalYew > 1000 && totalGold > 100000) steelAxe += 1;
+		if(totalLogs[4] > 1000 && totalGold > 100000) steelAxe += 1;
 		else{
 			document.getElementById("AxeText").innerHTML = "You need 1000 yew logs and 100000 gold to buy the Rune Axe";
 			setTimeout(function(){CraftText("AxeText")}, 5000);
@@ -2204,12 +2203,12 @@ function save(){
 	document.cookie = "nextMiningLevelC=" + nextMiningLevel; 
 	document.cookie = "nextFishingLevelC=" + nextFishingLevel;
 	document.cookie = "totalWoodcuttingExpC=" + totalWoodcuttingExp; 
-	document.cookie = "totalLogsC=" + totalLogs; 
-	document.cookie = "totalOakC=" + totalOak; 
-	document.cookie = "totalWillowC=" + totalWillow;
-	document.cookie = "totalMapleC=" + totalMaple;
-	document.cookie = "totalYewC=" + totalYew;
-	document.cookie = "totalMagicC=" + totalMagic;
+	document.cookie = "totalLogsC=" + totalLogs[0]; 
+	document.cookie = "totalOakC=" + totalLogs[1]; 
+	document.cookie = "totalWillowC=" +  totalLogs[2];
+	document.cookie = "totalMapleC=" +  totalLogs[3];
+	document.cookie = "totalYewC=" +  totalLogs[4];
+	document.cookie = "totalMagicC=" +  totalLogs[5];
 	document.cookie = "totalMiningExpC=" + totalMiningExp;
 	document.cookie = "totalCopperC=" + totalCopper;
 	document.cookie = "totalTinC=" + totalTin;
@@ -2285,12 +2284,12 @@ function load(){
 	nextFishingLevel = parseInt(getCookie("nextFishingLevelC"));
 	
 	totalWoodcuttingExp = parseFloat(getCookie("totalWoodcuttingExpC"));
-	totalLogs = parseInt(getCookie("totalLogsC"));
-	totalOak = parseInt(getCookie("totalOakC"));
-	totalWillow = parseInt(getCookie("totalWillowC"));
-	totalMaple = parseInt(getCookie("totalMapleC"));
-	totalYew = parseInt(getCookie("totalYewC"));
-	totalMagic = parseInt(getCookie("totalMagicC"));
+	totalLogs[0] = parseInt(getCookie("totalLogsC"));
+	totalLogs[1] = parseInt(getCookie("totalOakC"));
+	totalLogs[2] = parseInt(getCookie("totalWillowC"));
+	totalLogs[3] = parseInt(getCookie("totalMapleC"));
+	totalLogs[4] = parseInt(getCookie("totalYewC"));
+	totalLogs[5] = parseInt(getCookie("totalMagicC"));
 	
 	totalMiningExp = parseFloat(getCookie("totalMiningExpC"));
 	totalCopper = parseInt(getCookie("totalCopperC"));
@@ -2613,7 +2612,7 @@ function updatePrice(){
 	var curWoodcutID = [];
 	for(var i = 0; i < 6; i++) {
 		curWoodcutID = getWoodcutButtonIDs(i);
-		document.getElementById(curWoodcutID[1]).innerText = "Hire " + curWoodcutID[3] + " Logger: " + loggerVals[i].toLocaleString();
+		document.getElementById(curWoodcutID[1]).innerText = "Hire " + curWoodcutID[3] + " Logger: " + loggerVals[i].toString();
 	}
 	
 }
