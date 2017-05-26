@@ -55,21 +55,9 @@ var loggerWoodcutMul = [16, 16, 16, 15, 13, 11]
 
 
 //Mining
-var totalCopper = 0;
-var totalTin = 0;
-var totalIron = 0;
-var totalCoal = 0;
-var totalMithril = 0;
-var totalAdamantite = 0;
-var totalRunite = 0;
-
-var copperOre = 17.5;
-var tinOre = 17.5;
-var ironOre = 35;
-var coalOre = 50;
-var mithrilOre = 65;
-var adamantiteOre = 95;
-var runiteOre = 150;
+var totalOre = [0, 0, 0, 0, 0, 0 , 0];
+var totalGems = [0, 0, 0, 0, 0, 0, 0];
+var oreXP = [17.5, 17.5, 35, 50, 65, 95, 150];
 
 var sapphire = 0;
 var emerald = 0;
@@ -79,45 +67,22 @@ var dragonstone = 0;
 var onyx = 0;
 var zenyte = 0;
 
-var copperVal = 1;
-var tinVal = 1;
-var ironVal = 20;
-var coalVal = 100;
-var mithrilVal = 550;
-var adamantiteVal = 1450;
-var runiteVal = 12000;
+var oreVals = [1, 1, 20, 100, 550, 1450, 12000];
+var oreDelay;
 
-var copperDelay;
-var tinDelay;
-var ironDelay;
-var coalDelay;
-var mithrilDelay;
-var adamantiteDelay;
-var runiteDelay;
+var isMinerHired = [false, false, false, false, false, false, false];
+var oreMinerCost = [1500, 1500, 50000, 100000, 250000, 500000, 1000000];
+var minerCostIncrease = [100, 100, 10000, 20000, 50000, 100000, 100000];
+var numOreMiners = [0, 0, 0, 0, 0, 0, 0];
 
-var copperMinerHired = false;
-var tinMinerHired = false;
-var ironMinerHired = false;
-var coalMinerHired = false;
-var mithrilMinerHired = false;
-var adamantiteMinerHired = false;
-var runiteMinerHired = false;
+var mineRandOffset = [.09, .09, .15, .25, .5, .75, .9];
+var oreDelayOffset = [9400, 9400, 12250, 14250, 18250, 22500, 38000];
+var oreDifficulty = [625, 750, 900, 1100, 1600, 2100];
 
-var copperMinerVal = 1500;
-var tinMinerVal = 1500;
-var ironMinerVal = 50000;
-var coalMinerVal = 100000;
-var mithrilMinerVal = 250000;
-var adamantiteMinerVal = 500000;
-var runiteMinerVal = 1000000;
-
-var numCopperMiners = 0;
-var numTinMiners = 0;
-var numIronMiners = 0;
-var numCoalMiners = 0;
-var numMithrilMiners = 0;
-var numAdamantiteMiners = 0;
-var numRuniteMiners = 0;
+var minerAbility = [.98, .98, 1.3, 1.5, 1.65, 1.8, 2.3];
+var minerDelay = [15000, 15000, 16500, 18500, 20500, 31000];
+var minerMul = [8, 8, 6, 5, 3, 2, 1];
+var minerTime = [525, 525, 650, 850, 1000, 1100, 1600];
 
 //Fishing
 var totalShrimp = 0;
@@ -305,7 +270,7 @@ function disableButton(buttonID) {
 	document.getElementById(buttonID).disabled = true;
 	
 }
-//this is important! Don't fuck with it.
+//this is important! Don't fuck with it. Fucking with it will break all the code.
 //returns an array of element ids for that tree tier. Allows reduction of code duplication
 function getWoodcutButtonIDs(treeIndex) {
 	if(treeIndex == 0) {
@@ -328,6 +293,33 @@ function getWoodcutButtonIDs(treeIndex) {
 	}
 	else {
 		console.log("Failure. Check call of getWoodcutButtonIDs. treeIndex =" + treeIndex);
+	}
+}
+
+function getMineButtonIDs(oreIndex) {
+	if(oreIndex == 0) {
+		return ["copperButton", "copperMinerButton", "sellCopperButton", "copper"];
+	}
+	else if(oreIndex == 1) {
+		return ["tinButton", "tinMinerButton", "sellTinButton", "tin"];
+	}
+	else if(oreIndex == 2) {
+		return ["ironButton", "ironMinerButton", "sellIronButton", "iron"];
+	}
+	else if(oreIndex == 3) {
+		return ["coalButton", "coalMinerButton", "sellCoalButton", "coal"];
+	}
+	else if (oreIndex == 4) {
+		return ["mithrilButton", "mithrilMinerButton", "sellMithrilButton", "mithril"];
+	}
+	else if (oreIndex == 5) {
+		return ["adamantiteButton", "adamantiteMinerButton", "sellAdamantiteButton", "adamantite"];
+	}
+	else if (oreIndex == 6) {
+		return ["runiteButton", "runiteMinerButton", "sellRuniteButton", "runite"];
+	}
+	else {
+		console.log("Failure. Check call of getMineButtonIDs. oreIndex =" + oreIndex);
 	}
 }
 
@@ -547,129 +539,42 @@ function updateFishingButtons(){
 }
 
 function updateMiningButtons(){
-	if(totalCopper > 0){
-		document.getElementById("sellCopperButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellCopperButton").disabled = true;
-	}
-	if(totalTin > 0){
-		document.getElementById("sellTinButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellTinButton").disabled = true;
-	}
-	if(totalIron > 0){
-		document.getElementById("sellIronButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellIronButton").disabled = true;
-	}
-	if(totalCoal > 0){
-		document.getElementById("sellCoalButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellCoalButton").disabled = true;
-	}
-	if(totalMithril > 0){
-		document.getElementById("sellMithrilButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellMithrilButton").disabled = true;
-	}
-	if(totalAdamantite > 0){
-		document.getElementById("sellAdamantiteButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellAdamantiteButton").disabled = true;
-	}
-	if(totalRunite > 0){
-		document.getElementById("sellRuniteButton").disabled = false;
-	}
-	else{
-		document.getElementById("sellRuniteButton").disabled = true;
-	}
-	if(totalGold >= copperMinerVal && numCopperMiners < miningLevel){
-		document.getElementById("copperMinerButton").disabled = false;
-	}
-	else{
-		document.getElementById("copperMinerButton").disabled = true;
-	}
-	if(totalGold >= tinMinerVal && numTinMiners < miningLevel){
-		document.getElementById("tinMinerButton").disabled = false;
-	}
-	else{
-		document.getElementById("tinMinerButton").disabled = true;
-	}
-	if(totalGold >= ironMinerVal && numIronMiners < (miningLevel - 15) && miningLevel >= 15){
-		document.getElementById("ironMinerButton").disabled = false;
-	}
-	else{
-		document.getElementById("ironMinerButton").disabled = true;
-	}
-	if(totalGold >= coalMinerVal && numCoalMiners < (miningLevel - 30) && miningLevel >= 30){
-		document.getElementById("coalMinerButton").disabled = false;
-	}
-	else{
-		document.getElementById("coalMinerButton").disabled = true;
-	}
-	if(totalGold >= mithrilMinerVal && numMithrilMiners < (miningLevel - 55) && miningLevel >= 55){
-		document.getElementById("mithrilMinerButton").disabled = false;
-	}
-	else{
-		document.getElementById("mithrilMinerButton").disabled = true;
-	}
-	if(totalGold >= adamantiteMinerVal && numAdamantiteMiners < (miningLevel - 70) && miningLevel >= 70){
-		document.getElementById("adamantiteMinerButton").disabled = false;
-	}
-	else{
-		document.getElementById("adamantiteMinerButton").disabled = true;
-	}
-	if(totalGold >= runiteMinerVal && numRuniteMiners < (miningLevel - 85) && miningLevel >= 85){
-		document.getElementById("runiteMinerButton").disabled = false;
-	}
-	else{
-		document.getElementById("runiteMinerButton").disabled = true;
-	}
-	if(miningLevel >= 15){
-		document.getElementById("ironButton").style.display = "block";
-		document.getElementById("iron").style.display = "block";
-		if(!ironMinerHired){
-			document.getElementById("ironMinerButton").style.display = "block";
+	var curID = [];
+	var levelReq = [0, 0, 15, 30, 55, 70, 85]; //level requirements for each ore
+	for(var i = 0; i < 7; i++) {
+		curID = getMineButtonIDs(i);
+		//enable sell buttons if there are ore-- index 2 is the sell button
+		if(totalOre[i] > 0) {
+			document.getElementById(curID[2]).disabled = false;
+		} 
+		else {
+			document.getElementById(curID[2]).disabled = true;
 		}
-	}
-	if(miningLevel >= 30){
-		document.getElementById("coalButton").style.display = "block";
-		document.getElementById("coal").style.display = "block";
-		if(!coalMinerHired){
-			document.getElementById("coalMinerButton").style.display = "block";
+		
+		//enable purchase miner buttons
+		if(canBuyMiner(i, levelReq[i])) { 
+			document.getElementById(curID[1]).disabled = false;
 		}
-	}
-	if(miningLevel >= 55){
-		document.getElementById("mithrilButton").style.display = "block";
-		document.getElementById("mithril").style.display = "block";
-		if(!mithrilMinerHired){
-			document.getElementById("mithrilMinerButton").style.display = "block";
+		else {
+			document.getElementById(curID[1]).disabled = true;
 		}
-	}
-	if(miningLevel >= 70){
-		document.getElementById("adamantiteButton").style.display = "block";
-		document.getElementById("adamantite").style.display = "block";
-		if(!adamantiteMinerHired){
-			document.getElementById("adamantiteMinerButton").style.display = "block";
-		}
-	}
-	if(miningLevel >= 85){
-		document.getElementById("runiteButton").style.display = "block";
-		document.getElementById("runite").style.display = "block";
-		if(!runiteMinerHired){
-			document.getElementById("runiteMinerButton").style.display = "block";
+		
+		//display buttons based on ming level
+		if((i > 0) && (miningLevel > (levelReq[i]))) { // skip first run through
+			document.getElementById(curID[0]).style.display = "block";
+			document.getElementById(curID[3]).style.display = "block";
+			if(!isMinerHired[1]){
+				document.getElementById(curID[1]).style.display = "block";
+			}
 		}
 	}
 }
 
 function canBuyLogger(logIndex, levelRequired) { 
 	return ((totalGold >= loggerVals[logIndex]) && (numLoggers[logIndex] < (woodcuttingLevel - levelRequired) )&& (woodcuttingLevel >= levelRequired)) 
+}
+function canBuyMiner(oreIndex, levelRequired) { 
+	return ((totalGold >= oreMinerCost[oreIndex]) && (numOreMiners[oreIndex] < (miningLevel - levelRequired) )&& (miningLevel >= levelRequired)) 
 }
 
 function updateWoodcutButtons(){
@@ -715,13 +620,11 @@ function updateLogs(){
 }
 
 function updateOres(){
-	document.getElementById("copper").innerHTML = "Copper: " + totalCopper;
-	document.getElementById("tin").innerHTML = "Tin: " + totalTin;
-	document.getElementById("iron").innerHTML = "Iron: " + totalIron;
-	document.getElementById("coal").innerHTML = "Coal: " + totalCoal;
-	document.getElementById("mithril").innerHTML = "Mithril: " + totalMithril;
-	document.getElementById("adamantite").innerHTML = "Adamantite: " + totalAdamantite;
-	document.getElementById("runite").innerHTML = "Runite: " + totalRunite;
+	var curID = [];
+	for(var i = 0; i < 7; i++){
+		curID = getMineButtonIDs(i);
+		document.getElementById(curID[3]).innerHTML = curID[3]+ " :" + totalOre[i].toString();
+	}
 	document.getElementById("miningExp").innerHTML = "Mining Level: " + miningLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalMiningExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingMiningLevelExp.toLocaleString();
 }
 
@@ -795,7 +698,7 @@ function hireLogger(treeIndex){
 }
 
 function continuousLogs(treeIndex){
-	logDelay = ((Math.random() + loggerAbility[treeIndex]) * (loggerDelay[treeIndex] - (woodcuttingLevel * 16))) + (loggerTime[treeIndex] - woodcuttingLevel);
+	logDelay = ((Math.random() + loggerAbility[treeIndex]) * (loggerDelay[treeIndex] - (woodcuttingLevel * loggerWoodcutMul[treeIndex]))) + (loggerTime[treeIndex] - woodcuttingLevel);
 	setTimeout(function(){
 		totalLogs[treeIndex] = totalLogs[treeIndex] + (Math.ceil(Math.random() * Math.ceil(1 * (numLoggers[treeIndex] / 3))));
 		update();
@@ -810,316 +713,53 @@ function sellLog(treeIndex){
 	}
 }
 
-
 //Mining
-function getCopper(){
-	if(!moving){
-		copperDelay = ((Math.random() + .09) * (9400 - (miningLevel * 86))) + (625 - miningLevel);
-		document.getElementById("copperButton").style.backgroundColor = 'red';
-		document.getElementById("copperButton").disabled = true;
+function getOre(oreIndex) {
+	if(!moving) {
+		var ids = getMineButtonIDs(oreIndex);
+		document.getElementById(ids[0]).style.backgroundColor = 'red';
+		document.getElementById(ids[0]).disabled = true;
+		var oreDelay = ((Math.random() + mineRandOffset[oreIndex]) * (oreDelayOffset[oreIndex] - (miningLevel * 75))) + (oreDifficulty[oreIndex] - miningLevel);
 		setTimeout(function(){
-			totalCopper += 1;
-			totalMiningExp += copperOre;
+			totalOre[oreIndex] += 1;
+			totalMiningExp += oreXP[oreIndex];
 			update();
-			document.getElementById("copperButton").disabled = false;
-			document.getElementById("copperButton").style.backgroundColor = 'cyan';
-		}, copperDelay);
-	}	
-}
-
-function getTin(){
-	if(!moving){
-		tinDelay = ((Math.random() + .09) * (9400 - (miningLevel * 86))) + (625 - miningLevel);
-		document.getElementById("tinButton").style.backgroundColor = 'red';
-		document.getElementById("tinButton").disabled = true;
-		setTimeout(function(){
-			totalTin += 1;
-			totalMiningExp += tinOre;
-			update();
-			document.getElementById("tinButton").disabled = false;
-			document.getElementById("tinButton").style.backgroundColor = 'cyan';
-		}, tinDelay);
-	}	
-}
-
-function getIron(){
-	if(!moving){
-		ironDelay = ((Math.random() + .15) * (12250 - (miningLevel * 84))) + (750 - miningLevel);
-		document.getElementById("ironButton").style.backgroundColor = 'red';
-		document.getElementById("ironButton").disabled = true;
-		setTimeout(function(){
-			totalIron += 1;
-			totalMiningExp += ironOre;
-			update();
-			document.getElementById("ironButton").disabled = false;
-			document.getElementById("ironButton").style.backgroundColor = 'cyan';
-		}, ironDelay);
+			document.getElementById(ids[0]).disabled = false;
+			document.getElementById(ids[0]).style.backgroundColor = 'green';
+			pauseTreeSound();
+		}, oreDelay);
 	}
 }
 
-function getCoal(){
-	if(!moving){
-		coalDelay = ((Math.random() + .25) * (14250 - (miningLevel * 82))) + (900 - miningLevel);
-		document.getElementById("coalButton").style.backgroundColor = 'red';
-		document.getElementById("coalButton").disabled = true;
-		setTimeout(function(){
-			totalCoal += 1;
-			totalMiningExp += coalOre;
-			update();
-			document.getElementById("coalButton").disabled = false;
-			document.getElementById("coalButton").style.backgroundColor = 'cyan';
-		}, coalDelay);
-	}
-}
-
-function getMithril(){
-	if(!moving){
-		mithrilDelay = ((Math.random() + .5) * (18250 - (miningLevel * 80))) + (1100 - miningLevel);
-		document.getElementById("mithrilButton").style.backgroundColor = 'red';
-		document.getElementById("mithrilButton").disabled = true;
-		setTimeout(function(){
-			totalMithril += 1;
-			totalMiningExp += mithrilOre;
-			update();
-			document.getElementById("mithrilButton").disabled = false;
-			document.getElementById("mithrilButton").style.backgroundColor = 'cyan';
-		}, mithrilDelay);
-	}
-}
-
-function getAdamantite(){
-	if(!moving){
-		adamantiteDelay = ((Math.random() + .75) * (22500 - (miningLevel * 78))) + (1600 - miningLevel);
-		document.getElementById("adamantiteButton").style.backgroundColor = 'red';
-		document.getElementById("adamantiteButton").disabled = true;
-		setTimeout(function(){
-			totalAdamantite += 1;
-			totalMiningExp += adamantiteOre;
-			update();
-			document.getElementById("adamantiteButton").disabled = false;
-			document.getElementById("adamantiteButton").style.backgroundColor = 'cyan';
-		}, adamantiteDelay);
-	}	
-}
-
-function getRunite(){
-	if(!moving){
-		runiteDelay = ((Math.random() + .9) * (38000 - (miningLevel * 68))) + 2100;
-		document.getElementById("runiteButton").style.backgroundColor = 'red';
-		document.getElementById("runiteButton").disabled = true;
-		setTimeout(function(){
-			totalRunite += 1;
-			totalMiningExp += runiteOre;
-			update();
-			document.getElementById("runiteButton").disabled = false;
-			document.getElementById("runiteButton").style.backgroundColor = 'cyan';
-		}, runiteDelay);
-	}
-}
-
-function sellCopper(){
-	if(totalCopper > 0){
-		totalCopper -=1;
-		totalGold += copperVal;
+function sellOre(oreIndex){
+	if(totalOre[oreIndex] > 0){
+		totalOre[oreIndex]-= 1;
+		totalGold += oreVals[oreIndex];
 		update();
 	}
 }
 
-function sellTin(){
-	if(totalTin > 0){
-		totalTin -=1;
-		totalGold += tinVal;
-		update();
-	}
-}
-
-function sellIron(){
-	if(totalIron > 0){
-		totalIron -=1;
-		totalGold += ironVal;
-		update();
-	}
-}
-
-function sellCoal(){
-	if(totalCoal > 0){
-		totalCoal -=1;
-		totalGold += coalVal;
-		update();
-	}
-}
-
-function sellMithril(){
-	if(totalMithril > 0){
-		totalMithril -=1;
-		totalGold += mithrilVal;
-		update();
-	}
-}
-
-function sellAdamantite(){
-	if(totalAdamantite > 0){
-		totalAdamantite -=1;
-		totalGold += adamantiteVal;
-		update();
-	}
-}
-
-function sellRunite(){
-	if(totalRunite > 0){
-		totalRunite -=1;
-		totalGold += runiteVal;
-		update();
-	}
-}
-
-function hireCopperMiner(){
-	totalGold -= copperMinerVal;
-	numCopperMiners += 1;
-	copperMinerVal = Math.floor(copperMinerVal * 1.10) + 100;
+function hireMiner(oreIndex){
+	totalGold -= oreMinerCost[oreIndex];
+	numOreMiners[oreIndex] += 1;
+	oreMinerCost[oreIndex] = Math.floor(oreMinerCost[oreIndex] * 1.1) + minerCostIncrease[oreIndex];
 	updatePrice();
 	update();
-	if(!copperMinerHired){	
-		copperMinerHired = true;
-		continuousCopper();
+	if(!isMinerHired[oreIndex]){
+		isMinerHired[oreIndex] = true;
+		continuousOre(oreIndex);
 	}
-}
+} 
 
-function hireTinMiner(){
-	totalGold -= tinMinerVal;
-	numTinMiners += 1;
-	tinMinerVal = Math.floor(tinMinerVal * 1.10) + 100;
-	updatePrice();
-	update();
-	if(!tinMinerHired){	
-		tinMinerHired = true;
-		continuousTin();
-	}
-}
-
-function hireIronMiner(){
-	totalGold -= ironMinerVal;
-	numIronMiners += 1;
-	ironMinerVal = Math.floor(ironMinerVal * 1.10) + 1000;
-	updatePrice();
-	update();
-	if(!ironMinerHired){	
-		ironMinerHired = true;
-		continuousIron();
-	}
-}
-
-function hireCoalMiner(){
-	totalGold -= coalMinerVal;
-	numCoalMiners += 1;
-	coalMinerVal = Math.floor(coalMinerVal * 1.10) + 20000;
-	updatePrice();
-	update();
-	if(!coalMinerHired){	
-		coalMinerHired = true;
-		continuousCoal();
-	}
-}
-
-function hireMithrilMiner(){
-	totalGold -= mithrilMinerVal;
-	numMithrilMiners += 1;
-	mithrilMinerVal = Math.floor(mithrilMinerVal * 1.10) + 50000;
-	updatePrice();
-	update();
-	if(!mithrilMinerHired){
-		mithrilMinerHired = true;
-		continuousMithril();
-	}
-}
-
-function hireAdamantiteMiner(){
-	totalGold -= adamantiteMinerVal;
-	numAdamantiteMiners += 1;
-	adamantiteMinerVal = Math.floor(adamantiteMinerVal * 1.10) + 100000;
-	updatePrice();
-	update();
-	if(!adamantiteMinerHired){
-		adamantiteMinerHired = true;
-		continuousAdamantite();
-	}
-}
-
-function hireRuniteMiner(){
-	totalGold -= runiteMinerVal;
-	numRuniteMiners += 1;
-	runiteMinerHired = true;
-	runiteMinerVal = Math.floor(runiteMinerVal * 1.10) + 100000;
-	updatePrice();
-	update();
-	if(!runiteMinerHired){
-		runiteMinerHired = true;
-		continuousRunite();
-	}
-}
-
-function continuousCopper(){
-	copperDelay = ((Math.random() + .98) * (15000 - (miningLevel * 8))) + (525 - miningLevel);
+function continuousOre(oreIndex){
+	oreDelay = ((Math.random() + minerAbility[oreIndex]) * (minerDelay[oreIndex] - (miningLevel * minerMul[oreIndex]))) + (minerTime[oreIndex] - miningLevel);
 	setTimeout(function(){
-		totalCopper += Math.ceil(1 * (numCopperMiners/3));
+		totalOre[oreIndex] = totalOre[oreIndex] + Math.ceil(1 * (numOreMiners[oreIndex] / 3));
 		update();
-		setInterval(continuousCopper(), 100);
-	}, (copperDelay - (numCopperMiners * 260)));
+		setInterval(continuousOre(oreIndex), 100);
+	}, (oreDelay - (numOreMiners[oreIndex] * 260)));
 }
 
-function continuousTin(){
-	tinDelay = ((Math.random() + .98) * (15000 - (miningLevel * 8))) + (525 - miningLevel);
-	setTimeout(function(){
-		totalTin += Math.ceil(1 * (numTinMiners/3));
-		update();
-		setInterval(continuousTin(), 100);
-	}, (tinDelay - (numTinMiners * 260)));
-}
-
-function continuousIron(){
-	ironDelay = ((Math.random() + 1.3) * (16500 - (miningLevel * 6))) + (650 - miningLevel);
-	setTimeout(function(){
-		totalIron += Math.ceil(1 * (numIronMiners/3));
-		update();
-		setInterval(continuousIron(), 100);
-	}, (ironDelay - (numIronMiners * 260)));
-}
-
-function continuousCoal(){
-	coalDelay = ((Math.random() + 1.5) * (18500 - (miningLevel * 5))) + (850 - miningLevel);
-	setTimeout(function(){
-		totalCoal += Math.ceil(1 * (numCoalMiners/3));
-		update();
-		setInterval(continuousCoal(), 100);
-	}, (coalDelay - (numCoalMiners * 260)));
-}
-
-function continuousMithril(){
-	mithrilDelay = ((Math.random() + 1.65) * (20500 - (miningLevel * 3))) + (1000 - miningLevel);
-	setTimeout(function(){
-		totalMithril += Math.ceil(1 * (numMithrilMiners/3));
-		update();
-		setInterval(continuousMithril(), 100);
-	}, (mithrilDelay - (numMithrilMiners * 260)));
-}
-
-function continuousAdamantite(){
-	adamantiteDelay = ((Math.random() + 1.8) * (24500 - (miningLevel * 2))) + (1100 - miningLevel);
-	setTimeout(function(){
-		totalAdamantite += Math.ceil(1 * (numAdamantiteMiners/3));
-		update();
-		setInterval(continuousAdamantite(), 100);
-	}, (adamantiteDelay - (numAdamantiteMiners * 260)));
-}
-
-function continuousRunite(){
-	runiteDelay = ((Math.random() + 2.3) * (31000 - (miningLevel * 1))) + (1600 - miningLevel);
-	setTimeout(function(){
-		totalRunite += Math.ceil(1 * (numRuniteMiners/3));
-		update();
-		setInterval(continuousRunite(), 100);
-	}, (runiteDelay - (numRuniteMiners * 260)));
-}
 
 //Fishing
 function getShrimp(){
@@ -1985,20 +1625,13 @@ function attackEnemy(){
 
 function getLoss(){
 	document.getElementById("loss").innerHTML = "You lost: " + totalLogs[0].toString() + " Logs<br>" + "You lost: " +  totalLogs[1] + " Oak Logs<br>" + "You lost: " +  totalLogs[2] + " Willow Logs<br>" + "You lost: " +  totalLogs[3] + " Maple Logs<br>" + "You lost: " +  totalLogs[4] + " Yew Logs<br>" + "You lost: " + totalLogs[5] + " Magic Logs<br>" + "You lost: " + totalCopper + " Copper Ores<br>" + "You lost: " + totalTin + " Tin Ores<br>" + "You lost: " + totalIron + " Iron Ores<br>" + "You lost: " + totalCoal + " Coal<br>" + "You lost: " + totalMithril + " Mithril Ores<br>" + "You lost: " + totalAdamantite + " Adamantite Ores<br>" + "You lost: " + totalRunite + " Runite Ores<br>" + "You lost: " + totalShrimp + " Shrimp<br>" + "You lost: " + totalTrout + " Trout<br>" + "You lost: " + totalSalmon + " Salmon<br>" + "You lost: " + totalTuna + " Tuna<br>" + "You lost: " + totalLobster + " Lobsters<br>" + "You lost: " + totalSwordfish + " Swordfish<br>" + "You lost: " + totalShark + " Sharks<br>" + "You lost: All your equipment";
-	totalLogs[0] = 0;
-	totalLogs[1] = 0;
-	totalLogs[2] = 0;
-	totalLogs[3] = 0;
-	totalLogs[4] = 0;
-	totalLogs[5] = 0;
 	
-	totalCopper = 0;
-	totalTin = 0;
-	totalIron = 0;
-	totalCoal = 0;
-	totalMithril = 0;
-	totalAdamantite = 0;
-	totalRunite = 0;
+	for (var i = 0; i > 7; i++) {
+		totalLogs[i] = 0;
+		if(i != 6) {
+			totalOre[i] = 0;
+		}
+	}
 	
 	totalShrimp = 0;
 	totalTrout = 0;
@@ -2193,7 +1826,7 @@ function craft(obj){
 function CraftText(id){
 	document.getElementById(id).innerHTML = "";
 }
-
+//TODO
 function save(){
 	document.cookie = "totalGoldC=" + totalGold;
 	document.cookie = "remainingWoodcutLevelExpC=" + remainingWoodcutLevelExp;
@@ -2273,7 +1906,7 @@ function save(){
 	document.cookie = "onyxC=" + onyx; 
 	document.cookie = "zenyteC=" + zenyte;
 }
-
+//TODO
 function load(){
 	totalGold = parseInt(getCookie("totalGoldC"));
 	remainingWoodcutLevelExp = parseFloat(getCookie("remainingWoodcutLevelExpC"));
@@ -2599,15 +2232,12 @@ function updatePrice(){
 	document.getElementById("lobsterFishermanButton").innerText = "Hire Lobster Fisherman: " + lobsterFishermanVal.toLocaleString();
 	document.getElementById("swordfishFishermanButton").innerText = "Hire Swordfish Fisherman: " + swordfishFishermanVal.toLocaleString();
 	document.getElementById("sharkFishermanButton").innerText = "Hire Shark Fisherman: " + sharkFishermanVal.toLocaleString();
-	
-	document.getElementById("copperMinerButton").innerText = "Hire Copper Miner: " + copperMinerVal.toLocaleString();
-	document.getElementById("tinMinerButton").innerText = "Hire Tin Miner: " + tinMinerVal.toLocaleString();
-	document.getElementById("ironMinerButton").innerText = "Hire Iron Miner: " + ironMinerVal.toLocaleString();
-	document.getElementById("coalMinerButton").innerText = "Hire Coal Miner: " + coalMinerVal.toLocaleString();
-	document.getElementById("mithrilMinerButton").innerText = "Hire Mithril Miner: " + mithrilMinerVal.toLocaleString();
-	document.getElementById("adamantiteMinerButton").innerText = "Hire Adamantite Miner: " + adamantiteMinerVal.toLocaleString();
-	document.getElementById("runiteMinerButton").innerText = "Hire Runite Miner: " + runiteMinerVal.toLocaleString();
-	
+	//update miner price 
+	var curMineID = [];
+	for(var i = 0; i < 7; i++) {
+		curMineID = getMineButtonIDs(i);
+		document.getElementById(curMineID[1]).innerText = "Hire " + curMineID[3] + " Miner: " + oreMinerCost[i].toString();
+	}
 	//update logger price
 	var curWoodcutID = [];
 	for(var i = 0; i < 6; i++) {

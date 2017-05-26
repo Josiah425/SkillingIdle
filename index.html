@@ -59,50 +59,50 @@ SkillingIdle
 		<div class="main-content">
 			<h1>SkillingIdle</h1>
 			<img src="assets/pickaxe.png" style="float:left"/><h2><div id="miningExp"></div></h2><br>
-			<button style="background-color:cyan; color:grey" id="copperButton" onclick="getCopper();"><p>Copper</p></button>
+			<button style="background-color:cyan; color:grey" id="copperButton" onclick="getOre(0);"><p>Copper</p></button>
 			<p id="copper">Copper: 0</p>
-			<button style="background-color:cyan; color:grey" id="tinButton" onclick="getTin();"><p>Tin</p></button>
+			<button style="background-color:cyan; color:grey" id="tinButton" onclick="getOre(1);"><p>Tin</p></button>
 			<p id="tin">Tin: 0</p>
-			<button id="ironButton" style="display:none; background-color:cyan; color:grey" onclick="getIron();"><p>Iron</p></button>
+			<button id="ironButton" style="display:none; background-color:cyan; color:grey" onclick="getOre(2);"><p>Iron</p></button>
 			<p id = "iron" style="display:none"></p>
-			<button id="coalButton" style="display:none; background-color:cyan; color:grey" onclick="getCoal();"><p>Coal</p></button>
+			<button id="coalButton" style="display:none; background-color:cyan; color:grey" onclick="getOre(3);"><p>Coal</p></button>
 			<p id = "coal" style="display:none"></p>
-			<button id="mithrilButton" style="display:none; background-color:cyan; color:grey" onclick="getMithril();"><p>Mithril</p></button>
+			<button id="mithrilButton" style="display:none; background-color:cyan; color:grey" onclick="getOre(4);"><p>Mithril</p></button>
 			<p id = "mithril" style="display:none"></p>
-			<button id="adamantiteButton" style="display:none; background-color:cyan; color:grey" onclick="getAdamantite();"><p>Adamantite</p></button>
+			<button id="adamantiteButton" style="display:none; background-color:cyan; color:grey" onclick="getOre(5);"><p>Adamantite</p></button>
 			<p id = "adamantite" style="display:none"></p>
-			<button id="runiteButton" style="display:none; background-color:cyan; color:grey" onclick="getRunite();"><p>Runite</p></button>
+			<button id="runiteButton" style="display:none; background-color:cyan; color:grey" onclick="getOre(6);"><p>Runite</p></button>
 			<p id = "runite" style="display:none"></p>
 		</div>
 		<div class="aside">
 			<h1 class = "customH2">Hire Miners to do work for you!</h1>
 			<br>
-			<button class="button2 p2" id = "copperMinerButton" style="background-color: cyan" disabled="true" onclick="hireCopperMiner();"></button><br>
-			<button class="button2 p2" id = "tinMinerButton" style="background-color: cyan" disabled="true" onclick="hireTinMiner();"></button>
-			<button class="button2 p2" id = "ironMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireIronMiner();"></button>
-			<button class="button2 p2" id = "coalMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireCoalMiner();"></button>
-			<button class="button2 p2" id = "mithrilMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireMithrilMiner();"></button>
-			<button class="button2 p2" id = "adamantiteMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireAdamantiteMiner();"></button>
-			<button class="button2 p2" id = "runiteMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireRuniteMiner();"></button>
+			<button class="button2 p2" id = "copperMinerButton" style="background-color: cyan" disabled="true" onclick="hireMiner(0);"></button><br>
+			<button class="button2 p2" id = "tinMinerButton" style="background-color: cyan" disabled="true" onclick="hireMiner(1);"></button>
+			<button class="button2 p2" id = "ironMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireMiner(2);"></button>
+			<button class="button2 p2" id = "coalMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireMiner(3);"></button>
+			<button class="button2 p2" id = "mithrilMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireMiner(4);"></button>
+			<button class="button2 p2" id = "adamantiteMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireMiner(5);"></button>
+			<button class="button2 p2" id = "runiteMinerButton" disabled="true" style="display:none; background-color: cyan" onclick="hireMiner(6);"></button>
 		</div>
 		<div class="farther">
 			<h1 class="customH3">General Store<h1>
 			<div>
 			<img src="assets/smallCoin.gif" style="float:left"/><h2 class="customH3" id = "golden2"></h2>
 			</div>
-			<button class="button3 p3" id = "sellCopperButton" disabled="true" onclick="sellCopper();">Sell Copper: 1 GP</button>
+			<button class="button3 p3" id = "sellCopperButton" disabled="true" onclick="sellOre(0);">Sell Copper: 1 GP</button>
 			<br>
-			<button class="button3 p3" id = "sellTinButton" disabled="true" onclick="sellTin();">Sell Tin: 1 GP</button>
+			<button class="button3 p3" id = "sellTinButton" disabled="true" onclick="sellOre(1);">Sell Tin: 1 GP</button>
 			<br>
-			<button class="button3 p3" id = "sellIronButton" disabled="true" onclick="sellIron();">Sell Iron: 20 GP</button>
+			<button class="button3 p3" id = "sellIronButton" disabled="true" onclick="sellOre(2);">Sell Iron: 20 GP</button>
 			<br>
-			<button class="button3 p3" id = "sellCoalButton" disabled="true" onclick="sellCoal();">Sell Coal: 100 GP</button>
+			<button class="button3 p3" id = "sellCoalButton" disabled="true" onclick="sellOre(3);">Sell Coal: 100 GP</button>
 			<br>
-			<button class="button3 p3" id = "sellMithrilButton" disabled="true" onclick="sellMithril();">Sell Mithril: 550 GP</button>
+			<button class="button3 p3" id = "sellMithrilButton" disabled="true" onclick="sellOre(4);">Sell Mithril: 550 GP</button>
 			<br>
-			<button class="button3 p3" id = "sellAdamantiteButton" disabled="true" onclick="sellAdamantite();">Sell Adamantite: 1,450 GP</button>
+			<button class="button3 p3" id = "sellAdamantiteButton" disabled="true" onclick="sellOre(5);">Sell Adamantite: 1,450 GP</button>
 			<br>
-			<button class="button3 p3" id = "sellRuniteButton" disabled="true" onclick="sellRunite();">Sell Runite: 12,000 GP</button>
+			<button class="button3 p3" id = "sellRuniteButton" disabled="true" onclick="sellOre(6);">Sell Runite: 12,000 GP</button>
 		</div>
 	</div>
 	
