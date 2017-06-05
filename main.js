@@ -1624,12 +1624,12 @@ function attackEnemy(){
 }
 
 function getLoss(){
-	document.getElementById("loss").innerHTML = "You lost: " + totalLogs[0].toString() + " Logs<br>" + "You lost: " +  totalLogs[1] + " Oak Logs<br>" + "You lost: " +  totalLogs[2] + " Willow Logs<br>" + "You lost: " +  totalLogs[3] + " Maple Logs<br>" + "You lost: " +  totalLogs[4] + " Yew Logs<br>" + "You lost: " + totalLogs[5] + " Magic Logs<br>" + "You lost: " + totalCopper + " Copper Ores<br>" + "You lost: " + totalTin + " Tin Ores<br>" + "You lost: " + totalIron + " Iron Ores<br>" + "You lost: " + totalCoal + " Coal<br>" + "You lost: " + totalMithril + " Mithril Ores<br>" + "You lost: " + totalAdamantite + " Adamantite Ores<br>" + "You lost: " + totalRunite + " Runite Ores<br>" + "You lost: " + totalShrimp + " Shrimp<br>" + "You lost: " + totalTrout + " Trout<br>" + "You lost: " + totalSalmon + " Salmon<br>" + "You lost: " + totalTuna + " Tuna<br>" + "You lost: " + totalLobster + " Lobsters<br>" + "You lost: " + totalSwordfish + " Swordfish<br>" + "You lost: " + totalShark + " Sharks<br>" + "You lost: All your equipment";
+	document.getElementById("loss").innerHTML = "You lost: " + totalLogs[0] + " Logs<br>" + "You lost: " +  totalLogs[1] + " Oak Logs<br>" + "You lost: " +  totalLogs[2] + " Willow Logs<br>" + "You lost: " +  totalLogs[3] + " Maple Logs<br>" + "You lost: " +  totalLogs[4] + " Yew Logs<br>" + "You lost: " + totalLogs[5] + " Magic Logs<br>" + "You lost: " + totalOre[0] + " Copper Ores<br>" + "You lost: " + totalOre[1] + " Tin Ores<br>" + "You lost: " + totalOre[2] + " Iron Ores<br>" + "You lost: " + totalOre[3] + " Coal<br>" + "You lost: " + totalOre[4] + " Mithril Ores<br>" + "You lost: " + totalOre[5] + " Adamantite Ores<br>" + "You lost: " + totalOre[6] + " Runite Ores<br>" + "You lost: " + totalShrimp + " Shrimp<br>" + "You lost: " + totalTrout + " Trout<br>" + "You lost: " + totalSalmon + " Salmon<br>" + "You lost: " + totalTuna + " Tuna<br>" + "You lost: " + totalLobster + " Lobsters<br>" + "You lost: " + totalSwordfish + " Swordfish<br>" + "You lost: " + totalShark + " Sharks<br>" + "You lost: All your equipment";
 	
-	for (var i = 0; i > 7; i++) {
-		totalLogs[i] = 0;
-		if(i != 6) {
-			totalOre[i] = 0;
+	for (var i = 0; i > totalOre.length; i++) {
+		totalOre[i] = 0;
+		if(i < 7) {
+			totalLogs[i] = 0;
 		}
 	}
 	
@@ -1843,13 +1843,13 @@ function save(){
 	document.cookie = "totalYewC=" +  totalLogs[4];
 	document.cookie = "totalMagicC=" +  totalLogs[5];
 	document.cookie = "totalMiningExpC=" + totalMiningExp;
-	document.cookie = "totalCopperC=" + totalCopper;
-	document.cookie = "totalTinC=" + totalTin;
-	document.cookie = "totalIronC=" + totalIron;
-	document.cookie = "totalCoalC=" + totalCoal;
-	document.cookie = "totalMithrilC=" + totalMithril; 
-	document.cookie = "totalAdamantiteC=" + totalAdamantite; 
-	document.cookie = "totalRuniteC=" + totalRunite;
+	document.cookie = "totalCopperC=" + totalOre[0];
+	document.cookie = "totalTinC=" + totalOre[1];
+	document.cookie = "totalIronC=" + totalOre[2];
+	document.cookie = "totalCoalC=" + totalOre[3];
+	document.cookie = "totalMithrilC=" + totalOre[4]; 
+	document.cookie = "totalAdamantiteC=" + totalOre[5]; 
+	document.cookie = "totalRuniteC=" + totalOre[6];
 	document.cookie = "totalFishingExpC=" + totalFishingExp;
 	document.cookie = "totalShrimpC=" + totalShrimp; 
 	document.cookie = "totalTroutC=" + totalTrout; 
@@ -1925,13 +1925,13 @@ function load(){
 	totalLogs[5] = parseInt(getCookie("totalMagicC"));
 	
 	totalMiningExp = parseFloat(getCookie("totalMiningExpC"));
-	totalCopper = parseInt(getCookie("totalCopperC"));
-	totalTin = parseInt(getCookie("totalTinC"));
-	totalIron = parseInt(getCookie("totalIronC"));
-	totalCoal = parseInt(getCookie("totalCoalC"));
-	totalMithril = parseInt(getCookie("totalMithrilC"));
-	totalAdamantite = parseInt(getCookie("totalAdamantiteC"));
-	totalRunite = parseInt(getCookie("totalRuniteC"));
+	totalOre[0] = parseInt(getCookie("totalCopperC"));
+	totalOre[1] = parseInt(getCookie("totalTinC"));
+	totalOre[2] = parseInt(getCookie("totalIronC"));
+	totalOre[3] = parseInt(getCookie("totalCoalC"));
+	totalOre[4] = parseInt(getCookie("totalMithrilC"));
+	totalOre[5] = parseInt(getCookie("totalAdamantiteC"));
+	totalOre[6] = parseInt(getCookie("totalRuniteC"));
 	
 	totalFishingExp = parseFloat(getCookie("totalFishingExpC"));
 	totalShrimp = parseInt(getCookie("totalShrimpC"));
