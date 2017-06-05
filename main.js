@@ -345,6 +345,10 @@ function update(){
 	remainingWoodcutLevelExp = nextWoodcuttingLevel - totalWoodcuttingExp;
 	remainingMiningLevelExp = nextMiningLevel - totalMiningExp;
 	remainingFishingLevelExp = nextFishingLevel - totalFishingExp;
+	remainingAttackLevelExp = nextAttackLevel - totalAttackExp;
+	remainingStrengthLevelExp = nextStrengthLevel - totalStrengthExp;
+	remainingDefenseLevelExp = nextDefenseLevel - totalDefenseExp;
+	remainingHpLevelExp = nextHpLevel - totalHpExp;
 	levelUp();
 	updateWoodcutButtons();
 	updateMiningButtons();
@@ -1586,15 +1590,19 @@ function attackEnemy(){
 	if(enemy < 7){
 		if(attackStyle == 0){
 			totalAttackExp += fightExp;
+			remainingAttackLevelExp -= fightExp;
 		}
 		else if(attackStyle == 1){
 			totalStrengthExp += fightExp;
+			remainingStrengthLevelExp -= fightExp;
 		}
 		else if(attackStyle == 2){
 			totalDefenseExp += fightExp;
+			remainingDefenseLevelExp -= fightExp;
 		}
 		
 		totalHpExp += Math.floor(fightExp / 3);
+		remainingHpLevelExp -= Math.floor(fightExp / 3);
 	}
 	
 	if(health <= 0){
