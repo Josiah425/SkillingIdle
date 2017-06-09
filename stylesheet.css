@@ -56,15 +56,6 @@ button{
 .roundButton{
 	width: 8%;
 }
-.round-button-circle{
-	width: 65;
-	height: 0;
-	padding-bottom: 100%;
-	border-radius: 50%;
-	border: 1px;
-	overflow: hidden;
-	background: #FF6600;
-}
 .roundButton p {
     display: inline;
 	float:left;
@@ -81,8 +72,48 @@ button{
     font-weight:bold;
     text-decoration:none;
 }
+.roundButtonBoss{
+	width: 8%;
+}
+.roundButtonBoss p{
+	display: inline;
+	float:left;
+	width: 100%;
+	padding-top:35%;
+    padding-bottom:25%;
+	line-height:1em;
+	margin-top: -.2em;
+    
+	text-align:center;
+	color: orange;
+    font-family:Verdana;
+    font-size: 16px;
+    font-weight:bold;
+    text-decoration:none;
+}
+.round-button-circle{
+	width: 65;
+	height: 0;
+	padding-bottom: 100%;
+	border-radius: 50%;
+	border: 1px;
+	overflow: hidden;
+	background: #FF6600;
+}
 .round-button-circle:hover {
 	background:#30588e;
+}
+.round-button-boss{
+	width: 65;
+	height: 65;
+	padding-bottom: 0%;
+	border-radius: 50%;
+	border: 1px;
+	overflow: hidden;
+	background: black;
+}
+.round-button-boss:hover{
+	background:red;
 }
 body{
 	background-color: #D2B26F;
@@ -164,4 +195,11 @@ body{
   text-align: center;
   line-height: 30px;
   color: white;
+}
+#canvas {
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
 }

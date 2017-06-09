@@ -248,6 +248,21 @@ var fightExp;
 var attackStyle = 0;
 var hit = 0;
 
+var wizardOrbX = new Array(5);
+var wizardOrbY = new Array(5);
+var wizardBalls = new Array(5);
+var wizardBallsX = new Array(5);
+var wizardBallsY = new Array(5);
+var darkMageInterval;
+var canvas, canvasContext;
+var mouseX, mouseY;
+var done = false;
+var shieldThickness = 10;
+var shieldWidth = 100;
+var shieldHeight = 100;
+var shieldX = 400;
+var shieldY = 400;
+
 var demonicRing = 0;
 var draconicVisage = 0;
 
@@ -323,7 +338,28 @@ function getMineButtonIDs(oreIndex) {
 	}
 }
 
+function updateMousePos(event){
+	var rect = canvas.getBoundingClientRect();
+	var root = document.documentElement;
+
+	mouseX = event.clientX - rect.left - root.scrollLeft;
+	mouseY = event.clientY - rect.top - root.scrollTop;
+	
+	shieldX = mouseX - shieldWidth/2;
+	shieldY = mouseY - shieldHeight/2;
+}
+
 function start(){
+	canvas = document.getElementById('gameCanvas');
+	canvas.width = document.body.clientWidth;
+	canvas.height = document.body.clientHeight;
+	canvasContext = canvas.getContext('2d');
+	canvas.addEventListener('mousemove', updateMousePos);
+	for(var i = 0; i < 5; i++){
+		wizardBalls[i] = false;
+		wizardOrbX[i] = 6;
+		wizardOrbY[i] = 6;
+	}
 	updatePrice();
 	document.getElementById("Woodcutting").style.display = "block"
 	document.getElementById("Mining").style.display = "none"
@@ -1074,6 +1110,105 @@ function continuousShark(){
 	}, (sharkDelay - (numSharkFisherman * 260)));
 }
 
+function disableEnemyButtons(){
+	document.getElementById("goblinButton").disabled = true;
+	document.getElementById("skeletonButton").disabled = true;
+	document.getElementById("giantButton").disabled = true;
+	document.getElementById("ghostButton").disabled = true;
+	document.getElementById("demonButton").disabled = true;
+	document.getElementById("hellhoundButton").disabled = true;
+	document.getElementById("dragonButton").disabled = true;
+}
+
+function enableEnemyButtons(){
+	document.getElementById("goblinButton").disabled = false;
+	document.getElementById("skeletonButton").disabled = false;
+	document.getElementById("giantButton").disabled = false;
+	document.getElementById("ghostButton").disabled = false;
+	document.getElementById("demonButton").disabled = false;
+	document.getElementById("hellhoundButton").disabled = false;
+	document.getElementById("dragonButton").disabled = false;
+}
+
+function disableCombatButtons(){
+	document.getElementById("attackButton").disabled = true;
+	document.getElementById("strengthButton").disabled = true;
+	document.getElementById("defenseButton").disabled = true;
+	document.getElementById("magicButton").disabled = true;
+	document.getElementById("itemButton").disabled = true;
+	document.getElementById("goblinButton").style.backgroundColor = "black";
+	document.getElementById("skeletonButton").style.backgroundColor = "black";
+	document.getElementById("giantButton").style.backgroundColor = "black";
+	document.getElementById("ghostButton").style.backgroundColor = "black";
+	document.getElementById("demonButton").style.backgroundColor = "black";
+	document.getElementById("hellhoundButton").style.backgroundColor = "black";
+	document.getElementById("dragonButton").style.backgroundColor = "black";
+}
+
+function enableCombatButtons(){
+	document.getElementById("strengthButton").disabled = false;
+	document.getElementById("defenseButton").disabled = false;
+	document.getElementById("attackButton").disabled = false;
+	document.getElementById("magicAttackButton").disabled = false;
+	document.getElementById("itemButton").disabled = false;
+	document.getElementById("ocean").disabled = false;
+	document.getElementById("mines").disabled = false;
+	document.getElementById("forest").disabled = false;
+}
+
+function darkMageEncounter(){
+	if(done){
+		darkMageLoot();
+		canvas.style.display = "none";
+		document.getElementById("Bosses").style.display = "block";
+		document.getElementById("bottom").style.display = "block";
+		enemyHp = 1;
+		done = false;
+		clearInterval(darkMageInterval);
+	}
+	canvasContext.fillStyle = 'black';
+	canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+	for(var i = 0; i < 5; i++){
+		if(!wizardBalls[i]){
+			wizardBallsX[i] = Math.random() * canvas.width;
+			wizardBallsY[i] = Math.random() * canvas.height;
+			wizardBalls[i] = true;
+		}
+		else{
+			wizardBallsX[i] += wizardOrbX[i];
+			wizardBallsY[i] += wizardOrbY[i];
+		}
+		if(wizardBallsX[i] <= 0 || wizardBallsX[i] >= canvas.width) wizardOrbX[i] *= -1;
+		if(wizardBallsY[i] <= 0 || wizardBallsY[i] >= canvas.height) wizardOrbY[i] *= -1;
+		canvasContext.fillStyle = 'red';
+		canvasContext.beginPath();
+		canvasContext.arc(wizardBallsX[i], wizardBallsY[i], 10, 0, Math.PI*2, true);
+		canvasContext.fill();
+		canvasContext.fillStyle = 'white';
+		canvasContext.fillRect(shieldX, canvas.height/2, shieldWidth, shieldThickness);
+		
+		//if we hit the shield
+		var shieldTop = canvas.height/2;
+		var shieldBottom = shieldTop + shieldThickness;
+		var shieldLeft = shieldX;
+		var shieldRight = shieldLeft + shieldWidth;
+		
+		if( wizardBallsY[i] > shieldTop && 
+			wizardBallsY[i] < shieldBottom && 
+			wizardBallsX[i] > shieldLeft && 
+			wizardBallsX[i] < shieldRight ){
+		
+			wizardBalls[i] = false;
+			wizardOrbX[i] = 6;
+			wizardOrbY[i] = 6;
+			enemyHp--;
+		}
+		
+	}
+	
+	if(enemyHp <= 0) done = true;
+}
+
 //Combat
 function fightGoblin(){
 	document.getElementById("goblinButton").style.backgroundColor = "green";
@@ -1085,13 +1220,8 @@ function fightGoblin(){
 	document.getElementById("dragonButton").style.backgroundColor = "black";
 	document.getElementById("combatText").innerHTML = "You encounter a Goblin";
 	document.getElementById("enemyHp").innerHTML = "Enemy Health: 5";
-	document.getElementById("goblinButton").disabled = true;
-	document.getElementById("skeletonButton").disabled = true;
-	document.getElementById("giantButton").disabled = true;
-	document.getElementById("ghostButton").disabled = true;
-	document.getElementById("demonButton").disabled = true;
-	document.getElementById("hellhoundButton").disabled = true;
-	document.getElementById("dragonButton").disabled = true;
+	enableCombatButtons();
+	disableEnemyButtons();
 	getEnemy();
 }
 
@@ -1105,13 +1235,8 @@ function fightSkeleton(){
 	document.getElementById("dragonButton").style.backgroundColor = "black";
 	document.getElementById("combatText").innerHTML = "You encounter a Skeleton";
 	document.getElementById("enemyHp").innerHTML = "Enemy Health: 15";
-	document.getElementById("goblinButton").disabled = true;
-	document.getElementById("skeletonButton").disabled = true;
-	document.getElementById("giantButton").disabled = true;
-	document.getElementById("ghostButton").disabled = true;
-	document.getElementById("demonButton").disabled = true;
-	document.getElementById("hellhoundButton").disabled = true;
-	document.getElementById("dragonButton").disabled = true;
+	enableCombatButtons();
+	disableEnemyButtons();
 	getEnemy();
 }
 
@@ -1125,13 +1250,8 @@ function fightGiant(){
 	document.getElementById("dragonButton").style.backgroundColor = "black";
 	document.getElementById("combatText").innerHTML = "You encounter a Giant";
 	document.getElementById("enemyHp").innerHTML = "Enemy Health: 25";
-	document.getElementById("goblinButton").disabled = true;
-	document.getElementById("skeletonButton").disabled = true;
-	document.getElementById("giantButton").disabled = true;
-	document.getElementById("ghostButton").disabled = true;
-	document.getElementById("demonButton").disabled = true;
-	document.getElementById("hellhoundButton").disabled = true;
-	document.getElementById("dragonButton").disabled = true;
+	enableCombatButtons();
+	disableEnemyButtons();
 	getEnemy();
 }
 
@@ -1145,13 +1265,8 @@ function fightGhost(){
 	document.getElementById("dragonButton").style.backgroundColor = "black";
 	document.getElementById("combatText").innerHTML = "You encounter a Ghost";
 	document.getElementById("enemyHp").innerHTML = "Enemy Health: 30";
-	document.getElementById("goblinButton").disabled = true;
-	document.getElementById("skeletonButton").disabled = true;
-	document.getElementById("giantButton").disabled = true;
-	document.getElementById("ghostButton").disabled = true;
-	document.getElementById("demonButton").disabled = true;
-	document.getElementById("hellhoundButton").disabled = true;
-	document.getElementById("dragonButton").disabled = true;
+	enableCombatButtons();
+	disableEnemyButtons();
 	getEnemy();
 }
 
@@ -1165,13 +1280,8 @@ function fightDemon(){
 	document.getElementById("dragonButton").style.backgroundColor = "black";
 	document.getElementById("combatText").innerHTML = "You encounter a Demon";
 	document.getElementById("enemyHp").innerHTML = "Enemy Health: 50";
-	document.getElementById("goblinButton").disabled = true;
-	document.getElementById("skeletonButton").disabled = true;
-	document.getElementById("giantButton").disabled = true;
-	document.getElementById("ghostButton").disabled = true;
-	document.getElementById("demonButton").disabled = true;
-	document.getElementById("hellhoundButton").disabled = true;
-	document.getElementById("dragonButton").disabled = true;
+	enableCombatButtons();
+	disableEnemyButtons();
 	getEnemy();
 }
 
@@ -1185,13 +1295,8 @@ function fightHellhound(){
 	document.getElementById("dragonButton").style.backgroundColor = "black";
 	document.getElementById("combatText").innerHTML = "You encounter a Hellhound";
 	document.getElementById("enemyHp").innerHTML = "Enemy Health: 80";
-	document.getElementById("goblinButton").disabled = true;
-	document.getElementById("skeletonButton").disabled = true;
-	document.getElementById("giantButton").disabled = true;
-	document.getElementById("ghostButton").disabled = true;
-	document.getElementById("demonButton").disabled = true;
-	document.getElementById("hellhoundButton").disabled = true;
-	document.getElementById("dragonButton").disabled = true;
+	enableCombatButtons();
+	disableEnemyButtons();
 	getEnemy();
 }
 
@@ -1205,14 +1310,53 @@ function fightDragon(){
 	document.getElementById("dragonButton").style.backgroundColor = "green";
 	document.getElementById("combatText").innerHTML = "You encounter a Dragon";
 	document.getElementById("enemyHp").innerHTML = "Enemy Health: 120";
-	document.getElementById("goblinButton").disabled = true;
-	document.getElementById("skeletonButton").disabled = true;
-	document.getElementById("giantButton").disabled = true;
-	document.getElementById("ghostButton").disabled = true;
-	document.getElementById("demonButton").disabled = true;
-	document.getElementById("hellhoundButton").disabled = true;
-	document.getElementById("dragonButton").disabled = true;
+	disableEnemyButtons();
 	getEnemy();
+}
+
+function fightDarkMage(){
+	enemyHp = 5;
+	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("bottom").style.display = "none";
+	var framesPerSecond = 30;
+	canvas.style.display = "block";
+	darkMageInterval = setInterval(darkMageEncounter, 1000/framesPerSecond);
+}
+
+function darkMageLoot(){
+	roll = (Math.random() * 100);
+		if(roll < 2){
+			document.getElementById("combatText").innerHTML = "You loot nothing";
+		}
+		else if(roll >= 2 && roll < 10){
+			totalGold += 2500;
+			document.getElementById("combatText").innerHTML = "You loot 2500 gold pieces";
+		}
+		else if(roll >= 10 && roll < 12){
+			zenyteAmulet += 1;
+			document.getElementById("combatText").innerHTML = "You loot a zenyte amulet";
+		}
+		else if(roll >= 12 && roll < 20){
+			dragonstone += 1;
+			document.getElementById("combatText").innerHTML = "You loot a dragonstone";
+		}
+		else if(roll >= 20 && roll < 30){
+			diamond += 1;
+			document.getElementById("combatText").innerHTML = "You loot a diamond";
+		}
+		else if(roll >= 30 && roll < 45){
+			ruby += 1;
+			document.getElementById("combatText").innerHTML = "You loot a ruby";
+		}
+		else if(roll >= 45 && roll < 70){
+			emerald += 1;
+			document.getElementById("combatText").innerHTML = "You loot an emerald";
+		}
+		else{
+			sapphire += 1;
+			document.getElementById("combatText").innerHTML = "You loot a sapphire";
+		}
+	update();
 }
 
 function goblinLoot(){
@@ -1443,7 +1587,7 @@ function attackEnemy(){
 		goblinLoot();
 	}
 	else if(enemy == 1){
-		if(Math.random() * accuracy >= 2){
+		if(Math.random() * accuracy >= .2){
 			hit = Math.floor((Math.random() * ((strengthLevel * .4) + (attackPower * .2))) + Math.ceil(((attackPower + strengthLevel) / 64)));
 			enemyHp -= hit;
 			document.getElementById("combatText").innerHTML = "You hit Skeleton for: " + hit;
@@ -1616,7 +1760,8 @@ function attackEnemy(){
 		document.getElementById("Combat").style.display = "none";
 		document.getElementById("bottom").style.display = "none";
 		document.getElementById("enemyText").innerHTML = "\xa0"
-		enableCombatButtons();
+		disableCombatButtons();
+		enableEnemyButtons();
 		document.getElementById("combatText").innerHTML = "You died...";
 		enemy = 7;
 	}
@@ -1625,7 +1770,8 @@ function attackEnemy(){
 		enemy = 7;
 		enemyHp = "dead";
 		document.getElementById("enemyText").innerHTML = "You killed an enemy!";
-		enableCombatButtons();
+		disableCombatButtons();
+		enableEnemyButtons();
 	}
 	
 	update();
@@ -1758,31 +1904,6 @@ function getEnemy(){
 	}
 	
 	update();
-}
-
-function enableCombatButtons(){
-	document.getElementById("strengthButton").disabled = false;
-	document.getElementById("defenseButton").disabled = false;
-	document.getElementById("attackButton").disabled = false;
-	document.getElementById("magicAttackButton").disabled = false;
-	document.getElementById("itemButton").disabled = false;
-	document.getElementById("goblinButton").disabled = false;
-	document.getElementById("skeletonButton").disabled = false;
-	document.getElementById("giantButton").disabled = false;
-	document.getElementById("ghostButton").disabled = false;
-	document.getElementById("demonButton").disabled = false;
-	document.getElementById("hellhoundButton").disabled = false;
-	document.getElementById("dragonButton").disabled = false;
-	document.getElementById("ocean").disabled = false;
-	document.getElementById("mines").disabled = false;
-	document.getElementById("forest").disabled = false;
-	document.getElementById("goblinButton").style.backgroundColor = "black";
-	document.getElementById("skeletonButton").style.backgroundColor = "black";
-	document.getElementById("giantButton").style.backgroundColor = "black";
-	document.getElementById("ghostButton").style.backgroundColor = "black";
-	document.getElementById("demonButton").style.backgroundColor = "black";
-	document.getElementById("hellhoundButton").style.backgroundColor = "black";
-	document.getElementById("dragonButton").style.backgroundColor = "black";
 }
 
 //TODO
@@ -2030,11 +2151,13 @@ function travelMines(){
 	document.getElementById("Fishing").style.display = "none";
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "none";
+	document.getElementById("Bosses").style.display = "none";
 	document.getElementById("mines").style.display = "none";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("craft").style.display = "block";
+	document.getElementById("epic").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#999999";
 }
@@ -2045,12 +2168,14 @@ function travelForest(){
 	document.getElementById("Fishing").style.display = "none";
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "none";
+	document.getElementById("Bosses").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "none";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("death").style.display = "none";
 	document.getElementById("craft").style.display = "block";
+	document.getElementById("epic").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#D2B26F";
 }
@@ -2061,11 +2186,13 @@ function travelOcean(){
 	document.getElementById("Fishing").style.display = "block";
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "none";
+	document.getElementById("Bosses").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "none";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("craft").style.display = "block";
+	document.getElementById("epic").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "cyan";
 }
@@ -2076,11 +2203,13 @@ function travelDungeon(){
 	document.getElementById("Fishing").style.display = "none";
 	document.getElementById("Combat").style.display = "block";
 	document.getElementById("Crafting").style.display = "none";
+	document.getElementById("Bosses").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "none";
 	document.getElementById("craft").style.display = "block";
+	document.getElementById("epic").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#D20010";
 }
@@ -2091,13 +2220,32 @@ function travelCraft(){
 	document.getElementById("Fishing").style.display = "none";
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "block";
+	document.getElementById("Bosses").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("craft").style.display = "none";
+	document.getElementById("epic").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#DA9F4F";
+}
+
+function travelEpic(){
+	document.getElementById("Woodcutting").style.display = "none";
+	document.getElementById("Mining").style.display = "none";
+	document.getElementById("Fishing").style.display = "none";
+	document.getElementById("Combat").style.display = "none";
+	document.getElementById("Crafting").style.display = "none";
+	document.getElementById("Bosses").style.display = "block";
+	document.getElementById("mines").style.display = "block";
+	document.getElementById("forest").style.display = "block";
+	document.getElementById("ocean").style.display = "block";
+	document.getElementById("dungeon").style.display = "block";
+	document.getElementById("craft").style.display = "block";
+	document.getElementById("epic").style.display = "none";
+	document.getElementById("bottom").style.display = "block";
+	document.body.style.backgroundColor = "white";
 }
 
 function travelCook(){

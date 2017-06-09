@@ -9,6 +9,7 @@ SkillingIdle
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 
 <body onload = "start()">
+<canvas id="gameCanvas" style="display:none"></canvas>
 	<div class="wrapperTop" style="display:block" id="Woodcutting">
 		<div class="main-content">
 			<h1>SkillingIdle</h1>
@@ -163,21 +164,21 @@ SkillingIdle
 			<img src="assets/test.gif" style="float:left"/><h4><div id="combatExp" style="float:left"></div></h4><br><br>
 			<h4 style="color: yellow; float:left" id="enemyHp"></h4><h4 style="color: blue" id="health"></h4>
 			<h4><div id="attackExp"></div></h4>
-			<button style="background-color: red; color: black" font="24px" id="attackButton" onclick="setAttack(); attackEnemy();"><p>Attack</p></button>
+			<button style="background-color: red; color: black" font="24px" id="attackButton" disabled="true" onclick="setAttack(); attackEnemy();"><p>Attack</p></button>
 			<h4><div id="strengthExp"></div></h4>
-			<button style="background-color: green; color: red" id="strengthButton" onclick="setStrength(); attackEnemy();"><p>Strength</p></button>
+			<button style="background-color: green; color: red" id="strengthButton" disabled="true" onclick="setStrength(); attackEnemy();"><p>Strength</p></button>
 			<h4><div id="defenseExp"></div></h4>
-			<button style="background-color: blue; color: white" id="defenseButton" onclick="setDefense(); attackEnemy();"><p>Defense</p></button>
+			<button style="background-color: blue; color: white" id="defenseButton" disabled="true" onclick="setDefense(); attackEnemy();"><p>Defense</p></button>
 			<h4><div id="magicExp"></div></h4>
-			<button style="background-color: purple; color: white" font="24px" id="magicAttackButton"><p>Magic</p></button><br><br><br>
-			<button style="background-color: brown; color: gold" font="24px" id="itemButton"><p>Use Item</p></button><br><br>
+			<button style="background-color: purple; color: white" font="24px" id="magicAttackButton" disabled="true"><p>Magic</p></button><br><br><br>
+			<button style="background-color: brown; color: gold" font="24px" id="itemButton" disabled="true"><p>Use Item</p></button><br><br>
 			<div id="enemyText"></div>
 			<div id="combatText"></div>
 		</div>
 		<div class ="aside">
 			<h1 class="customH2">Choose What you wish to fight!</h1>
 			<br>
-			<button class="button2 p2" id="goblinButton" disabled="true" style="background-color: green; color: white" onclick="fightGoblin()">Goblin</button><br>
+			<button class="button2 p2" id="goblinButton" style="background-color: black; color: white" onclick="fightGoblin()">Goblin</button><br>
 			<button class="button2 p2" id="skeletonButton" style="background-color: black; color: white" onclick="fightSkeleton()">Skeleton</button><br>
 			<button class="button2 p2" id="giantButton" style="background-color: black; color: white" onclick="fightGiant()">Giant</button><br>
 			<button class="button2 p2" id="ghostButton" style="background-color: black; color: white" onclick="fightGhost()">Ghost</button><br>
@@ -320,6 +321,25 @@ SkillingIdle
 		</div>
 	</div>
 	
+	<div class="wrapperTop" style="display:none" id="Bosses">
+		<div class="main-content">
+			<h1>SkillingIdle</h1>
+			<h2>Be careful these enemies are tough!</h2>
+			<br>
+			<button class="round-button-boss roundButtonBoss" id="darkMageButton" onclick="fightDarkMage()"><p>Dark Mage</p></button><br>
+		</div>
+		<div class ="aside">
+			
+		</div>
+		<div class="farther">
+			<p id="swordEquipped">Sword: Nothing</p>
+			<p id="shieldEquipped">Shield: Nothing</p>
+			<p id="platebodyEquipped">Platebody: Nothing</p>
+			<p id="platelegsEquipped">Platelegs: Nothing</p>
+			<p id="amuletEquipped">Amulet: Nothing</p>
+		</div>
+	</div>
+	
 	<div class="wrapperBottom" id="bottom">
 		<div class="map">
 			<h1 class="h1Bottom"><font size="5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Travel</font></h1>
@@ -330,6 +350,7 @@ SkillingIdle
 					<th><button class="round-button-circle roundButton" id="ocean" onclick="move(); setTimeout(travelOcean, 5000)"><p>Ocean</p></button></th>
 					<th><button class="round-button-circle roundButton" id="dungeon" onclick="move(); setTimeout(travelDungeon, 5000)"><p>Dungeons</p></button></th>
 					<th><button class="round-button-circle roundButton" id="craft" onclick="move(); setTimeout(travelCraft, 5000)"><p>Crafting</p></button></th>
+					<th><button class="round-button-circle roundButton" id="epic" onclick="move(); setTimeout(travelEpic, 5000)"><p>Epic</p></button></th>
 				</tr>
 			</table>
 			<p>*Traveling takes 60 seconds until teleportation is unlocked*</p>
