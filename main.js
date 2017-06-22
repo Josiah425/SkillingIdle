@@ -2021,12 +2021,33 @@ function CraftText(id){
 //TODO
 function save(){
 	document.cookie = "totalGoldC=" + totalGold;
+	document.cookie = "woodcuttingLevelC=" + woodcuttingLevel;
+	document.cookie = "miningLevelC=" + miningLevel;
+	document.cookie = "fishingLevelC=" + fishingLevel;
+	document.cookie = "attackLevelC=" + attackLevel;
+	document.cookie = "strengthLevelC=" + strengthLevel;
+	document.cookie = "hpLevelC=" + hpLevel;
+	document.cookie = "defenseLevelC=" + defenseLevel;
+	document.cookie = "magicLevelC=" + magicLevel;
+	document.cookie = "craftingLevelC=" + craftingLevel;
 	document.cookie = "remainingWoodcutLevelExpC=" + remainingWoodcutLevelExp;
 	document.cookie = "remainingMiningLevelExpC=" + remainingMiningLevelExp;
 	document.cookie = "remainingFishingLevelExpC=" + remainingFishingLevelExp;
+	document.cookie = "remainingAttackLevelExpC=" + remainingAttackLevelExp;
+	document.cookie = "remainingStrengthLevelExpC=" + remainingStrengthLevelExp;
+	document.cookie = "remainingDefenseLevelExpC=" + remainingDefenseLevelExp;
+	document.cookie = "remainingHpLevelExpC=" + remainingHpLevelExp;
+	document.cookie = "remainingMagicLevelExpC=" + remainingMagicLevelExp;
+	document.cookie = "remainingCraftingLevelExpC=" + remainingCraftingLevelExp;
 	document.cookie = "nextWoodcuttingLevelC=" + nextWoodcuttingLevel; 
 	document.cookie = "nextMiningLevelC=" + nextMiningLevel; 
 	document.cookie = "nextFishingLevelC=" + nextFishingLevel;
+	document.cookie = "nextAttackLevelC=" + nextAttackLevel;
+	document.cookie = "nextStrengthLevelC=" + nextStrengthLevel;
+	document.cookie = "nextDefenseLevelC=" + nextDefenseLevel;
+	document.cookie = "nextHpLevelC=" + nextHpLevel;
+	document.cookie = "nextMagicLevelC=" + nextMagicLevel;
+	document.cookie = "nextCraftingLevelC=" + nextCraftingLevel;
 	document.cookie = "totalWoodcuttingExpC=" + totalWoodcuttingExp; 
 	document.cookie = "totalLogsC=" + totalLogs[0]; 
 	document.cookie = "totalOakC=" + totalLogs[1]; 
@@ -2089,7 +2110,8 @@ function save(){
 	document.cookie = "tunaFishermanValC=" + tunaFishermanVal; 
 	document.cookie = "lobsterFishermanValC=" + lobsterFishermanVal;
 	document.cookie = "swordfishFishermanValC=" + swordfishFishermanVal; 
-	document.cookie = "sharkFishermanValC=" + sharkFishermanVal; 
+	document.cookie = "sharkFishermanValC=" + sharkFishermanVal;
+	document.cookie = "totalCraftingExpC=" + totalCraftingExp;
 	document.cookie = "sapphireC=" + sapphire; 
 	document.cookie = "emeraldC=" + emerald; 
 	document.cookie = "rubyC=" + ruby; 
@@ -2097,16 +2119,42 @@ function save(){
 	document.cookie = "dragonstoneC=" + dragonstone; 
 	document.cookie = "onyxC=" + onyx; 
 	document.cookie = "zenyteC=" + zenyte;
+	document.cookie = "totalAttackExpC=" + totalAttackExp;
+	document.cookie = "totalStrengthExpC=" + totalStrengthExp;
+	document.cookie = "totalDefenseExpC=" + totalDefenseExp;
+	document.cookie = "totalHpExpC=" + totalHpExp;
+	document.cookie = "totalMagicExpC=" + totalMagicExp;
 }
 //TODO
 function load(){
 	totalGold = parseInt(getCookie("totalGoldC"));
+	woodcuttingLevel = parseInt(getCookie("woodcuttingLevelC"));
+	miningLevel = parseInt(getCookie("miningLevelC"));
+	fishingLevel = parseInt(getCookie("fishingLevelC"));
+	attackLevel = parseInt(getCookie("attackLevelC"));
+	strengthLevel = parseInt(getCookie("strengthLevelC"));
+	defenseLevel = parseInt(getCookie("defenseLevelC"));
+	hpLevel = parseInt(getCookie("hpLevelC"));
+	magicLevel = parseInt(getCookie("magicLevelC"));
+	craftingLevel = parseInt(getCookie("craftingLevelC"));
 	remainingWoodcutLevelExp = parseFloat(getCookie("remainingWoodcutLevelExpC"));
 	remainingMiningLevelExp = parseFloat(getCookie("remainingMiningLevelExpC"));
 	remainingFishingLevelExp = parseFloat(getCookie("remainingFishingLevelExpC"));
+	remainingAttackLevelExp = parseFloat(getCookie("remainingAttackLevelExpC"));
+	remainingStrengthLevelExp = parseFloat(getCookie("remainingStrengthLevelExpC"));
+	remainingDefenseLevelExp = parseFloat(getCookie("remainingDefenseLevelExpC"));
+	remainingHpLevelExp = parseFloat(getCookie("remainingHpLevelExpC"));
+	remainingMagicLevelExp = parseFloat(getCookie("remainingMagicLevelExpC"));
+	remainingCraftingLevelExp = parseFloat(getCookie("remainingCraftingLevelExpC"));
 	nextWoodcuttingLevel = parseInt(getCookie("nextWoodcuttingLevelC"));
 	nextMiningLevel = parseInt(getCookie("nextMiningLevelC"));
 	nextFishingLevel = parseInt(getCookie("nextFishingLevelC"));
+	nextAttackLevel = parseInt(getCookie("nextAttackLevelC"));
+	nextStrengthLevel = parseInt(getCookie("nextStrengthLevelC"));
+	nextDefenseLevel = parseInt(getCookie("nextDefenseLevelC"));
+	nextHpLevel = parseInt(getCookie("nextHpLevelC"));
+	nextMagicLevel = parseInt(getCookie("nextMagicLevelC"));
+	nextCraftingLevel = parseInt(getCookie("nextCraftingLevelC"));
 	
 	totalWoodcuttingExp = parseFloat(getCookie("totalWoodcuttingExpC"));
 	totalLogs[0] = parseInt(getCookie("totalLogsC"));
@@ -2133,6 +2181,14 @@ function load(){
 	totalLobster = parseInt(getCookie("totalLobsterC"));
 	totalSwordfish = parseInt(getCookie("totalSwordfishC"));
 	totalShark = parseInt(getCookie("totalSharkC"));
+	
+	totalAttackExp = parseFloat(getCookie("totalAttackExpC"));
+	totalStrengthExp = parseFloat(getCookie("totalStrengthExpC"));
+	totalDefenseExp = parseFloat(getCookie("totalDefenseExpC"));
+	totalHpExp = parseFloat(getCookie("totalHpExpC"));
+	totalMagicExp = parseFloat(getCookie("totalMagicExpC"));
+	
+	totalCraftingExp = parseFloat(getCookie("totalCraftingExpC"));
 	
 	numLoggers = parseInt(getCookie("numLoggersC"));
 	numOakLoggers = parseInt(getCookie("numOakLoggersC"));
