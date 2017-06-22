@@ -1,6 +1,7 @@
-
 var soundWood = new Audio("music/ChoppingWood2.mp3");
 soundWood.volume = .56;
+var soundPickaxe = new Audio("music/Pickaxe.mp3");
+soundPickaxe.volume = .56;
 var backgroundSound = new Audio("music/Background.mp3");
 backgroundSound.loop = true;
 backgroundSound.volume = .58;
@@ -401,33 +402,75 @@ function update(){
 function levelUp(){
 	if(totalWoodcuttingExp >= nextWoodcuttingLevel){
 		woodcuttingLevel += 1;
+		backgroundSound.pause();
+		var audio = new Audio("music/Woodcutting.mp3");
+		audio.play();
+		audio.onended = function(){
+			backgroundSound.currentTime = 0;
+			if(document.getElementById("settings").innerText == "Disable Sound") backgroundSound.play();
+		};
 		nextWoodcuttingLevel = Math.floor(woodcuttingLevel + 74.5 * Math.pow(2, woodcuttingLevel/7)) + nextWoodcuttingLevel;
 		remainingWoodcutLevelExp = nextWoodcuttingLevel - totalWoodcuttingExp;
 	}
 	if(totalMiningExp >= nextMiningLevel){
 		miningLevel += 1;
+		backgroundSound.pause();
+		var audio = new Audio("music/Mining.mp3");
+		audio.play();
+		audio.onended = function(){
+			backgroundSound.currentTime = 0;
+			if(document.getElementById("settings").innerText == "Disable Sound") backgroundSound.play();
+		};
 		nextMiningLevel = Math.floor(miningLevel + 74.5 * Math.pow(2, miningLevel/7)) + totalMiningExp;
 		remainingMiningLevelExp = nextMiningLevel - totalMiningExp;
 	}
 	if(totalFishingExp >= nextFishingLevel){
 		fishingLevel += 1;
+		backgroundSound.pause();
+		var audio = new Audio("music/Fishing.mp3");
+		audio.play();
+		audio.onended = function(){
+			backgroundSound.currentTime = 0;
+			if(document.getElementById("settings").innerText == "Disable Sound") backgroundSound.play();
+		};
 		nextFishingLevel = Math.floor(fishingLevel + 74.5 * Math.pow(2, fishingLevel/7)) + totalFishingExp;
 		remainingFishingLevelExp = nextFishingLevel - totalFishingExp;
 	}
 	if(totalAttackExp >= nextAttackLevel){
 		attackLevel += 1;
+		backgroundSound.pause();
+		var audio = new Audio("music/Attack.mp3");
+		audio.play();
+		audio.onended = function(){
+			backgroundSound.currentTime = 0;
+			if(document.getElementById("settings").innerText == "Disable Sound") backgroundSound.play();
+		};
 		combinedCombatLevels += 1;
 		nextAttackLevel = Math.floor(attackLevel + 74.5 * Math.pow(2, attackLevel/7)) + totalAttackExp;
 		remainingAttackLevelExp = nextAttackLevel - totalAttackExp;
 	}
 	if(totalStrengthExp >= nextStrengthLevel){
 		strengthLevel += 1;
+		backgroundSound.pause();
+		var audio = new Audio("music/Strength.mp3");
+		audio.play();
+		audio.onended = function(){
+			backgroundSound.currentTime = 0;
+			if(document.getElementById("settings").innerText == "Disable Sound") backgroundSound.play();
+		};
 		combinedCombatLevels += 1;
 		nextStrengthLevel = Math.floor(strengthLevel + 74.5 * Math.pow(2, strengthLevel/7)) + totalStrengthExp;
 		remainingStrengthLevelExp = nextStrengthLevel - totalStrengthExp;
 	}
 	if(totalDefenseExp >= nextDefenseLevel){
 		defenseLevel += 1;
+		backgroundSound.pause();
+		var audio = new Audio("music/Defence.mp3");
+		audio.play();
+		audio.onended = function(){
+			backgroundSound.currentTime = 0;
+			if(document.getElementById("settings").innerText == "Disable Sound") backgroundSound.play();
+		};
 		combinedCombatLevels += 1;
 		nextDefenseLevel = Math.floor(defenseLevel + 74.5 * Math.pow(2, defenseLevel/7)) + totalDefenseExp;
 		remainingDefenseLevelExp = nextDefenseLevel - totalDefenseExp;
@@ -440,6 +483,13 @@ function levelUp(){
 	}
 	if(totalHpExp >= nextHpLevel){
 		hpLevel += 1;
+		backgroundSound.pause();
+		var audio = new Audio("music/Hitpoints.mp3");
+		audio.play();
+		audio.onended = function(){
+			backgroundSound.currentTime = 0;
+			if(document.getElementById("settings").innerText == "Disable Sound") backgroundSound.play();
+		};
 		combinedCombatLevels += 1;
 		nextHpLevel = Math.floor(hpLevel + 74.5 * Math.pow(2, hpLevel/7)) + totalHpExp;
 		remainingHpLevelExp = nextHpLevel - totalHpExp;
@@ -704,6 +754,16 @@ function pauseTreeSound(){
 	}
 }
 
+function pausePickaxeSound(){
+	if(document.getElementById("copperButton").style.backgroundColor == 'red' || document.getElementById("tinButton").style.backgroundColor == 'red' || document.getElementById("ironButton").style.backgroundColor == 'red' || document.getElementById("mithrilButton").style.backgroundColor == 'red' || document.getElementById("adamantiteButton").style.backgroundColor == 'red' || document.getElementById("runiteButton").style.backgroundColor == 'red'){
+	
+	}
+	else{
+		soundPickaxe.pause()
+		soundPickaxe.currentTime = 0;
+	}
+}
+
 //Woodcutting
 function getLogs(treeIndex) {
 	if(!moving) {
@@ -756,6 +816,9 @@ function sellLog(treeIndex){
 //Mining
 function getOre(oreIndex) {
 	if(!moving) {
+		if(soundPickaxe.paused){
+				soundPickaxe.play();
+		}
 		var ids = getMineButtonIDs(oreIndex);
 		document.getElementById(ids[0]).style.backgroundColor = 'red';
 		document.getElementById(ids[0]).disabled = true;
@@ -765,8 +828,8 @@ function getOre(oreIndex) {
 			totalMiningExp += oreXP[oreIndex];
 			update();
 			document.getElementById(ids[0]).disabled = false;
-			document.getElementById(ids[0]).style.backgroundColor = 'green';
-			pauseTreeSound();
+			document.getElementById(ids[0]).style.backgroundColor = 'cyan';
+			pausePickaxeSound();
 		}, oreDelay);
 	}
 }
