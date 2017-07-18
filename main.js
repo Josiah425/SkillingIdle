@@ -31,6 +31,15 @@ var totalCraftingExp = 0;
 var nextCraftingLevel = 83;
 var remainingCraftingLevelExp = 83;
 
+var smithingLevel = 1;
+var totalSmithingExp = 0;
+var nextSmithingLevel = 83;
+var remainingSmithingLevelExp = 83;
+
+var tier = ["Bronze", "Iron", "Steel", "Mithril", "Adamant", "Rune"];
+var jewlery = ["Sapphire", "Emerald", "Ruby", "Diamond", "Dragonstone", "Onyx", "Zenyte"];
+var trinkets = ["Ring", "Necklace", "Amulet", "Bracelet"];
+
 //Woodcut
 var totalLogs = [0, 0, 0, 0, 0, 0];
 
@@ -149,48 +158,48 @@ var bronzeAxe = 0;
 var ironAxe = 0;
 var steelAxe = 0;
 var mithrilAxe = 0;
-var adamantiteAxe = 0;
-var runiteAxe = 0;
+var adamantAxe = 0;
+var runeAxe = 0;
 
 var woodenPickaxe = 0;
 var bronzePickaxe = 0;
 var ironPickaxe = 0;
 var steelPickaxe = 0;
 var mithrilPickaxe = 0;
-var adamantitePickaxe = 0;
-var runitePickaxe = 0;
+var adamantPickaxe = 0;
+var runePickaxe = 0;
 
 var woodenSword = 0;
 var bronzeSword = 0;
 var ironSword = 0;
 var steelSword = 0;
 var mithrilSword = 0;
-var adamantiteSword = 0;
-var runiteSword = 0;
+var adamantSword = 0;
+var runeSword = 0;
 
 var woodenHelmet = 0;
 var bronzeHelmet = 0;
 var ironHelmet = 0;
 var steelHelmet = 0;
 var mithrilHelmet = 0;
-var adamantiteHelmet = 0;
-var runiteHelmet = 0;
+var adamantHelmet = 0;
+var runeHelmet = 0;
 
 var woodenChestplate = 0;
 var bronzeChestplate = 0;
 var ironChestplate = 0;
 var steelChestplate = 0;
 var mithrilChestplate = 0;
-var adamantiteChestplate = 0;
-var runiteChestplate = 0;
+var adamantChestplate = 0;
+var runeChestplate = 0;
 
 var woodenPlatelegs = 0;
 var bronzePlatelegs = 0;
 var ironPlatelegs = 0;
 var steelPlatelegs = 0;
 var mithrilPlatelegs = 0;
-var adamantitePlatelegs = 0;
-var runitePlatelegs = 0;
+var adamantPlatelegs = 0;
+var runePlatelegs = 0;
 
 var sapphireAmulet = 0;
 var emeraldAmulet = 0;
@@ -200,13 +209,9 @@ var dragonstoneAmulet = 0;
 var onyxAmulet = 0;
 var zenyteAmulet = 0;
 
-var woodenHarpoon = 0;
-var bronzeHarpoon = 0;
-var ironHarpoon = 0;
-var steelHarpoon = 0;
-var mithrilHarpoon = 0;
-var adamantiteHarpoon = 0;
-var runiteHarpoon = 0;
+//Smithing
+var totalBars = [0, 0, 0, 0, 0, 0];
+var barVals = [15, 150, 400, 1350, 3500, 11500];
 
 //Combat
 var hpLevel = 10;
@@ -329,13 +334,37 @@ function getMineButtonIDs(oreIndex) {
 		return ["mithrilButton", "mithrilMinerButton", "sellMithrilButton", "mithril"];
 	}
 	else if (oreIndex == 5) {
-		return ["adamantiteButton", "adamantiteMinerButton", "sellAdamantiteButton", "adamantite"];
+		return ["adamantButton", "adamantMinerButton", "sellAdamantiteButton", "adamant"];
 	}
 	else if (oreIndex == 6) {
-		return ["runiteButton", "runiteMinerButton", "sellRuniteButton", "runite"];
+		return ["runeButton", "runeMinerButton", "sellRuniteButton", "rune"];
 	}
 	else {
 		console.log("Failure. Check call of getMineButtonIDs. oreIndex =" + oreIndex);
+	}
+}
+
+function getFurnaceButtonIDs(smeltIndex){
+	if(smeltIndex == 0) {
+		return ["bronzeBarButton", "sellBronzeBarButton", "bronzeBar"];
+	}
+	else if(smeltIndex == 1) {
+		return ["ironBarButton", "sellIronBarButton", "ironBar"];
+	}
+	else if(smeltIndex == 2) {
+		return ["steelBarButton", "sellSteelBarButton", "steelBar"];
+	}
+	else if(smeltIndex == 3) {
+		return ["mithrilBarButton", "sellMithrilBarButton", "mithrilBar"];
+	}
+	else if (smeltIndex == 4) {
+		return ["adamantBarButton", "sellAdamantBarButton", "adamantBar"];
+	}
+	else if (smeltIndex == 5) {
+		return ["runeBarButton", "sellRuneBarButton", "runeBar"];
+	}
+	else {
+		console.log("Failure. Check call of getFurnaceButtonIDs. smeltIndex =" + smeltIndex);
 	}
 }
 
@@ -362,16 +391,20 @@ function start(){
 		wizardOrbY[i] = 6;
 	}
 	updatePrice();
-	document.getElementById("Woodcutting").style.display = "block"
-	document.getElementById("Mining").style.display = "none"
-	document.getElementById("Fishing").style.display = "none"
-	document.getElementById("Combat").style.display = "none"
+	document.getElementById("Woodcutting").style.display = "block";
+	document.getElementById("Mining").style.display = "none";
+	document.getElementById("Fishing").style.display = "none";
+	document.getElementById("Combat").style.display = "none";
+	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("Smelting").style.display = "none";
 	document.getElementById("death").style.display = "none";
 	document.getElementById("golden").innerHTML = "Gold: " + totalGold.toLocaleString();
 	document.getElementById("golden2").innerHTML = "Gold: " + totalGold.toLocaleString();
 	document.getElementById("golden3").innerHTML = "Gold: " + totalGold.toLocaleString();
+	document.getElementById("golden4").innerHTML = "Gold: " + totalGold.toLocaleString();
 	document.getElementById("woodcutExp").innerHTML = '&nbsp&nbsp' + "Woodcutting Level: " + woodcuttingLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalWoodcuttingExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingWoodcutLevelExp.toLocaleString();
 	document.getElementById("miningExp").innerHTML = '&nbsp&nbsp' + "Mining Level: " + miningLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalMiningExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingMiningLevelExp.toLocaleString();
+	document.getElementById("smithingExp").innerHTML = '&nbsp&nbsp' + "Smithing Level: " + smithingLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalSmithingExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingSmithingLevelExp.toLocaleString();
 	document.getElementById("fishingExp").innerHTML = '&nbsp&nbsp' + "Fishing Level: " + fishingLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalFishingExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingFishingLevelExp.toLocaleString();
 	document.getElementById("combatExp").innerHTML = '&nbsp&nbsp' + "Combat Level: " + combatLevel + '\xa0\xa0\xa0' + "Hitpoints Level: " + hpLevel + '\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalHpExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingHpLevelExp.toLocaleString();
 	document.getElementById("craftingExp").innerHTML = '&nbsp&nbsp' + "Crafting Level: " + craftingLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalCraftingExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingCraftingLevelExp.toLocaleString();
@@ -386,12 +419,16 @@ function update(){
 	remainingStrengthLevelExp = nextStrengthLevel - totalStrengthExp;
 	remainingDefenseLevelExp = nextDefenseLevel - totalDefenseExp;
 	remainingHpLevelExp = nextHpLevel - totalHpExp;
+	remainingCraftingLevelExp = nextCraftingLevel - totalCraftingExp;
+	remainingSmithingLevelExp = nextSmithingLevel - totalSmithingExp;
 	levelUp();
 	updateWoodcutButtons();
 	updateMiningButtons();
+	updateSmithingButtons();
 	updateFishingButtons();
 	updateLogs();
 	updateOres();
+	updateBars();
 	updateFish();
 	updateCombat();
 	document.getElementById("golden").innerHTML = "Gold: " + totalGold.toLocaleString();
@@ -660,6 +697,27 @@ function updateMiningButtons(){
 	}
 }
 
+function updateSmithingButtons(){
+	var curID = [];
+	var levelReq = [0, 15, 30, 55, 70, 85]; //level requirements for each bar
+	for(var i = 0; i < 6; i++) {
+		curID = getFurnaceButtonIDs(i);
+		//enable sell buttons if there are ore-- index 1 is the sell button
+		if(totalBars[i] > 0) {
+			document.getElementById(curID[1]).disabled = false;
+		} 
+		else {
+			document.getElementById(curID[1]).disabled = true;
+		}
+		
+		//display buttons based on smithing level
+		if((i > 0) && (smithingLevel > (levelReq[i]))) { // skip first run through
+			document.getElementById(curID[0]).style.display = "block";
+			document.getElementById(curID[2]).style.display = "block";
+		}
+	}
+}
+
 function canBuyLogger(logIndex, levelRequired) { 
 	return ((totalGold >= loggerVals[logIndex]) && (numLoggers[logIndex] < (woodcuttingLevel - levelRequired) )&& (woodcuttingLevel >= levelRequired)) 
 }
@@ -718,6 +776,15 @@ function updateOres(){
 	document.getElementById("miningExp").innerHTML = "Mining Level: " + miningLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalMiningExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingMiningLevelExp.toLocaleString();
 }
 
+function updateBars(){
+	var curID = [];
+	for(var i = 0; i < 6; i++){
+		curID = getFurnaceButtonIDs(i);
+		document.getElementById(curID[2]).innerHTML = curID[2]+ " :" + totalBars[i].toString();
+	}
+	document.getElementById("smithingExp").innerHTML = "Smithing Level: " + smithingLevel + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience: " + totalSmithingExp.toLocaleString() + '\xa0\xa0\xa0\xa0\xa0\xa0' + "Experience to Next Level: " + remainingSmithingLevelExp.toLocaleString();
+}
+
 function updateFish(){
 	document.getElementById("shrimp").innerHTML = "Shrimp: " + totalShrimp;
 	document.getElementById("trout").innerHTML = "Trout: " + totalTrout;
@@ -755,7 +822,7 @@ function pauseTreeSound(){
 }
 
 function pausePickaxeSound(){
-	if(document.getElementById("copperButton").style.backgroundColor == 'red' || document.getElementById("tinButton").style.backgroundColor == 'red' || document.getElementById("ironButton").style.backgroundColor == 'red' || document.getElementById("mithrilButton").style.backgroundColor == 'red' || document.getElementById("adamantiteButton").style.backgroundColor == 'red' || document.getElementById("runiteButton").style.backgroundColor == 'red'){
+	if(document.getElementById("copperButton").style.backgroundColor == 'red' || document.getElementById("tinButton").style.backgroundColor == 'red' || document.getElementById("ironButton").style.backgroundColor == 'red' || document.getElementById("mithrilButton").style.backgroundColor == 'red' || document.getElementById("adamantButton").style.backgroundColor == 'red' || document.getElementById("runeButton").style.backgroundColor == 'red'){
 	
 	}
 	else{
@@ -812,6 +879,7 @@ function sellLog(treeIndex){
 		update();
 	}
 }
+
 
 //Mining
 function getOre(oreIndex) {
@@ -1272,6 +1340,7 @@ function darkMageEncounter(){
 	if(enemyHp <= 0) done = true;
 }
 
+
 //Combat
 function fightGoblin(){
 	document.getElementById("goblinButton").style.backgroundColor = "green";
@@ -1561,8 +1630,8 @@ function demonLoot(){
 			document.getElementById("combatText").innerHTML = "You loot a sapphire amulet";
 		}
 		else if(roll >= 140 && roll < 145){
-			runiteOre += 1;
-			document.getElementById("combatText").innerHTML = "You loot a runite ore";
+			runeOre += 1;
+			document.getElementById("combatText").innerHTML = "You loot a rune ore";
 		}
 		else if(roll >= 145 && roll < 150){
 			diamond += 1;
@@ -1864,48 +1933,48 @@ function getLoss(){
 	ironAxe = 0;
 	steelAxe = 0;
 	mithrilAxe = 0;
-	adamantiteAxe = 0;
-	runiteAxe = 0;
+	adamantAxe = 0;
+	runeAxe = 0;
 
 	woodenPickaxe = 0;
 	bronzePickaxe = 0;
 	ironPickaxe = 0;
 	steelPickaxe = 0;
 	mithrilPickaxe = 0;
-	adamantitePickaxe = 0;
-	runitePickaxe = 0;
+	adamantPickaxe = 0;
+	runePickaxe = 0;
 
 	woodenSword = 0;
 	bronzeSword = 0;
 	ironSword = 0;
 	steelSword = 0;
 	mithrilSword = 0;
-	adamantiteSword = 0;
-	runiteSword = 0;
+	adamantSword = 0;
+	runeSword = 0;
 
 	woodenHelmet = 0;
 	bronzeHelmet = 0;
 	ironHelmet = 0;
 	steelHelmet = 0;
 	mithrilHelmet = 0;
-	adamantiteHelmet = 0;
-	runiteHelmet = 0;
+	adamantHelmet = 0;
+	runeHelmet = 0;
 
 	woodenChestplate = 0;
 	bronzeChestplate = 0;
 	ironChestplate = 0;
 	steelChestplate = 0;
 	mithrilChestplate = 0;
-	adamantiteChestplate = 0;
-	runiteChestplate = 0;
+	adamantChestplate = 0;
+	runeChestplate = 0;
 
 	woodenPlatelegs = 0;
 	bronzePlatelegs = 0;
 	ironPlatelegs = 0;
 	steelPlatelegs = 0;
 	mithrilPlatelegs = 0;
-	adamantitePlatelegs = 0;
-	runitePlatelegs = 0;
+	adamantPlatelegs = 0;
+	runePlatelegs = 0;
 
 	sapphireAmulet = 0;
 	emeraldAmulet = 0;
@@ -1920,8 +1989,8 @@ function getLoss(){
 	ironHarpoon = 0;
 	steelHarpoon = 0;
 	mithrilHarpoon = 0;
-	adamantiteHarpoon = 0;
-	runiteHarpoon = 0;
+	adamantHarpoon = 0;
+	runeHarpoon = 0;
 	
 	draconicVisage = 0;
 	demonicRing = 0;
@@ -1969,54 +2038,567 @@ function getEnemy(){
 	update();
 }
 
-//TODO
-function craft(obj){
+
+//Crafting
+function smithAxe(obj){
+	disableAxeButtons();
 	if(obj.id == "BronzeAxe"){
-		if(totalLogs[0] > 15 && totalGold > 25) bronzeAxe += 1;
+		if(totalLogs[0] >= 1 && totalBars[0] >= 1 && totalGold >= 25) {
+			bronzeAxe += 1;
+			totalLogs[0] -= 1;
+			totalBars[0] -= 1;
+			totalGold -= 25;
+			totalSmithingExp += 12;
+			document.getElementById("AxeText").innerHTML = "You successfully smithed a Bronze Axe";
+		}
 		else{
-			document.getElementById("AxeText").innerHTML = "You need 15 logs and 25 gold to buy the Bronze Axe";
-			setTimeout(function(){CraftText("AxeText")}, 5000);
+			document.getElementById("AxeText").innerHTML = "You need 1 log, 1 bronze bar, and 25 gold to smith the Bronze Axe";
 		}
 	}
 	else if(obj.id == "IronAxe"){
-		if(totalLogs[1] > 50 && totalGold > 100) ironAxe += 1;
+		if(totalLogs[1] >= 1 && totalBars[1] >= 1 && totalGold >= 100){
+			ironAxe += 1;
+			totalLogs[1] -= 1;
+			totalBars[2] -= 1;
+			totalGold -= 100;
+			totalSmithingExp += 25;
+			document.getElementById("AxeText").innerHTML = "You successfully smithed a Bronze Axe";
+		}
 		else{
-			document.getElementById("AxeText").innerHTML = "You need 50 oak logs and 100 gold to buy the Iron Axe";
-			setTimeout(function(){CraftText("AxeText")}, 5000);
+			document.getElementById("AxeText").innerHTML = "You need 1 oak log, 1 iron bar, and 100 gold to smith the Iron Axe";
 		}
 	}
 	else if(obj.id == "SteelAxe"){
-		if(totalLogs[1] && totalGold > 500) steelAxe += 1;
+		if(totalLogs[2] >= 1 && totalBars[2] >= 1 && totalGold >= 250) steelAxe += 1;
 		else{
-			document.getElementById("AxeText").innerHTML = "You need 100 oak logs and 500 gold to buy the Steel Axe";
-			setTimeout(function(){CraftText("AxeText")}, 5000);
+			document.getElementById("AxeText").innerHTML = "You need 1 willow log, 1 steel bar, and 250 gold to smith the Steel Axe";
 		}
 	}
 	else if(obj.id == "MithrilAxe"){
-		if(totalLogs[2] > 250 && totalGold > 5000) mithrilAxe += 1;
+		if(totalLogs[3] >= 1 && totalBars[3] >= 1 && totalGold >= 1000) mithrilAxe += 1;
 		else{
-			document.getElementById("AxeText").innerHTML = "You need 250 willow logs and 5000 gold to buy the Mithril Axe";
-			setTimeout(function(){CraftText("AxeText")}, 5000);
+			document.getElementById("AxeText").innerHTML = "You need 1 maple log, 1 mithril bar, and 1000 gold to smith the Mithril Axe";
 		}
 	}
 	else if(obj.id == "AdamantAxe"){
-		if(totalLogs[3] > 500 && totalGold > 25000) adamantiteAxe += 1;
+		if(totalLogs[4] >= 1 && totalBars[4] >= 1 && totalGold >= 2500) adamantAxe += 1;
 		else{
-			document.getElementById("AxeText").innerHTML = "You need 500 maple logs and 25000 gold to buy the Adamant Axe";
-			setTimeout(function(){CraftText("AxeText")}, 5000);
+			document.getElementById("AxeText").innerHTML = "You need 1 yew log, 1 adamant bar, and 2500 gold to smith the Adamant Axe";
 		}
 	}
 	else if(obj.id == "RuneAxe"){
-		if(totalLogs[4] > 1000 && totalGold > 100000) steelAxe += 1;
+		if(totalLogs[5] >= 1 && totalBars[5] >= 1 && totalGold >= 35000) runeAxe += 1;
 		else{
-			document.getElementById("AxeText").innerHTML = "You need 1000 yew logs and 100000 gold to buy the Rune Axe";
-			setTimeout(function(){CraftText("AxeText")}, 5000);
+			document.getElementById("AxeText").innerHTML = "You need 1 magic log, 1 rune bar, and 35000 gold to smith the Rune Axe";
 		}
+	}
+	setTimeout(function(){CraftText("AxeText")}, 5000);
+}
+
+function smithPickaxe(obj){
+	disablePickaxeButtons();
+	//TODO If statements
+	if(obj.id == "BronzePickaxe"){
+		if(totalLogs[0] >= 1 && totalBars[0] >= 2 && totalGold >= 15) bronzePickaxe += 1;
+		else{
+			document.getElementById("PickaxeText").innerHTML = "You need 1 log, 2 bronze bars, and 15 gold to smith the Bronze Pickaxe";
+			setTimeout(function(){CraftText("PickaxeText")}, 5000);
+		}
+	}
+	else if(obj.id == "IronPickaxe"){
+		if(totalLogs[1] >= 1 && totalBars[1] >= 2 && totalGold >= 75) ironPickaxe += 1;
+		else{
+			document.getElementById("PickaxeText").innerHTML = "You need 1 oak log, 2 iron bars, and 75 gold to smith the Iron Pickaxe";
+			setTimeout(function(){CraftText("PickaxeText")}, 5000);
+		}
+	}
+	else if(obj.id == "SteelPickaxe"){
+		if(totalLogs[2] >= 1 && totalBars[2] >= 2 && totalGold >= 150) steelPickaxe += 1;
+		else{
+			document.getElementById("PickaxeText").innerHTML = "You need 1 willow log, 2 steel bars, and 150 gold to smith the Steel Pickaxe";
+			setTimeout(function(){CraftText("PickaxeText")}, 5000);
+		}
+	}
+	else if(obj.id == "MithrilPickaxe"){
+		if(totalLogs[3] >= 1 && totalBars[3] >= 2 && totalGold >= 750) mithrilPickaxe += 1;
+		else{
+			document.getElementById("PickaxeText").innerHTML = "You need 1 maple log, 2 mithril bars, and 750 gold to smith the Mithril Pickaxe";
+			setTimeout(function(){CraftText("PickaxeText")}, 5000);
+		}
+	}
+	else if(obj.id == "AdamantPickaxe"){
+		if(totalLogs[4] >= 1 && totalBars[4] >= 2 && totalGold >= 1500) adamantPickaxe += 1;
+		else{
+			document.getElementById("PickaxeText").innerHTML = "You need 1 yew log, 2 adamant bars, and 1500 gold to smith the Adamant Pickaxe";
+			setTimeout(function(){CraftText("PickaxeText")}, 5000);
+		}
+	}
+	else if(obj.id == "RunePickaxe"){
+		if(totalLogs[5] >= 1 && totalBars[5] >= 2 && totalGold >= 32000) runePickaxe += 1;
+		else{
+			document.getElementById("PickaxeText").innerHTML = "You need 1 magic log, 2 rune bars, and 32000 gold to smith the Rune Pickaxe";
+			setTimeout(function(){CraftText("PickaxeText")}, 5000);
+		}
+	}
+}
+
+function craftFishingRod(obj){
+	disableFishingRodButtons();
+	
+}
+
+function craftSword(obj){
+	disableSwordButtons();
+	
+}
+
+function craftScimitar(obj){
+	
+	disableScimitarButtons();
+}
+
+function craftTwoHanded(obj){
+	
+	disableTwoHandedButtons();
+}
+
+function craftHelmet(obj){
+	
+	disableHelmetButtons();
+}
+
+function craftPlatebody(obj){
+	
+	disablePlatebodyButtons();
+}
+
+function craftPlateleg(obj){
+	
+	disablePlatelegButtons();
+}
+
+function craftSapphireJewlery(obj){
+	
+	disableSapphireJewleryButtons();
+}
+
+function craftEmeraldJewlery(obj){
+	
+	disableEmeraldJewleryButtons();
+}
+
+function craftRubyJewlery(obj){
+	
+	disableRubyJewleryButtons();
+}
+
+function craftDiamondJewlery(obj){
+	
+	disableDiamondJewleryButtons();
+}
+
+function craftDragonstoneJewlery(obj){
+	
+	disableDragonstoneJewleryButtons();
+}
+
+function craftOnyxJewlery(obj){
+	
+	disableOnyxJewleryButtons();
+}
+
+function craftZenyteJewlery(obj){
+	
+	disableZenyteJewleryButtons();
+}
+
+function disableAxeButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Axe";
+		console.log(val);
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableAxeButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Axe";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disablePickaxeButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Pickaxe";
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enablePickaxeButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Pickaxe";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableFishingRodButtons(){
+	document.getElementById("Net").disabled = true;
+	document.getElementById("FishingRod").disabled = true;
+	document.getElementById("FlyFishingRod").disabled = true;
+	document.getElementById("BigNet").disabled = true;
+	document.getElementById("LobsterPot").disabled = true;
+	document.getElementById("Harpoon").disabled = true;
+}
+
+function enableFishingRodButtons(){
+	document.getElementById("Net").disabled = false;
+	document.getElementById("FishingRod").disabled = false;
+	document.getElementById("FlyFishingRod").disabled = false;
+	document.getElementById("BigNet").disabled = false;
+	document.getElementById("LobsterPot").disabled = false;
+	document.getElementById("Harpoon").disabled = false;
+}
+
+function disableSwordButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Sword";
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableSwordButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Sword";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableScimitarButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Scimitar";
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableScimitarButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Scimitar";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableTwoHandedButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "TwoHanded";
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableTwoHandedButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "TwoHanded";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableHelmetButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Helmet";
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableHelmetButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Helmet";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disablePlatebodyButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Platebody";
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enablePlatebodyButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Platebody";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disablePlatelegButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Plateleg";
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enablePlatelegButtons(){
+	for(var i = 0; i < tier.length; i++) {
+		val = tier[i];
+		val += "Plateleg";
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableSapphireJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[0];
+		val += trinkets[i];
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableSapphireJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[0];
+		val += trinkets[i];
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableEmeraldJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[1];
+		val += trinkets[i];
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableEmeraldJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[1];
+		val += trinkets[i];
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableRubyJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[2];
+		val += trinkets[i];
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableRubyJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[2];
+		val += trinkets[i];
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableDiamondJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[3];
+		val += trinkets[i];
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableDiamondJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[3];
+		val += trinkets[i];
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableDragonstoneJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[4];
+		val += trinkets[i];
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableDragonstoneJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[4];
+		val += trinkets[i];
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableOnyxJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[5];
+		val += trinkets[i];
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableOnyxJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[5];
+		val += trinkets[i];
+		document.getElementById(val).disabled = false;
+	}
+}
+
+function disableZenyteJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[6];
+		val += trinkets[i];
+		document.getElementById(val).disabled = true;
+	}
+}
+
+function enableZenyteJewleryButtons(){
+	for(var i = 0; i < trinkets.length; i++) {
+		val = jewlery[6];
+		val += trinkets[i];
+		document.getElementById(val).disabled = false;
 	}
 }
 
 function CraftText(id){
 	document.getElementById(id).innerHTML = "";
+	if(id == "AxeText") enableAxeButtons();
+	else if(id == "PickaxeText") enablePickaxeButtons();
+	else if(id == "FishingRodText") enableFishingRodButtons();
+	else if(id == "SwordText") enableSwordButtons();
+	else if(id == "ScimitarText") enableScimitarButtons();
+	else if(id == "TwoHandedText") enableTwoHandedButtons();
+	else if(id == "HelmetText") enableHelmetButtons();
+	else if(id == "PlatebodyText") enablePlatebodyButtons();
+	else if(id == "PlatelegText") enablePlatelegButtons();
+	else if(id == "SapphireJewleryText") enableSapphireJewleryButtons();
+	else if(id == "EmeraldJewleryText") enableEmeraldJewleryButtons();	
+	else if(id == "RubyJewleryText") enableRubyJewleryButtons();
+	else if(id == "DiamondJewleryText") enableDiamondJewleryButtons();
+	else if(id == "DragonstoneJewleryText") enableDragonstoneJewleryButtons();
+	else if(id == "OnyxJewleryText") enableOnyxJewleryButtons();
+	else if(id == "ZenyteJewleryText") enableZenyteJewleryButtons();
+}
+
+//Smithing
+
+function getBar(id){
+	if(!moving){
+		var ids = getFurnaceButtonIDs(id);
+		document.getElementById(ids[0]).style.backgroundColor = 'red';
+		document.getElementById(ids[0]).disabled = true;
+		var smeltDelay = ((Math.random() + mineRandOffset[id]) * (oreDelayOffset[id] - (smithingLevel * 75))) + (oreDifficulty[id] - miningLevel);
+		if(id == 0){
+			if(totalOre[0] >= 1 && totalOre[1] >= 1){
+				setTimeout(function(){
+					document.getElementById(ids[0]).disabled = false;
+					document.getElementById(ids[0]).style.backgroundColor = 'grey';
+					totalBars[0] += 1;
+					totalOre[0] -= 1;
+					totalOre[1] -= 1;
+					totalSmithingExp += 6;
+					update();
+				}, smeltDelay);
+			}
+			else{
+				document.getElementById(ids[0]).disabled = false;
+				document.getElementById(ids[0]).style.backgroundColor = 'grey';
+			}
+		}
+		else if(id == 1){
+			if(totalOre[2] >= 1){
+				setTimeout(function(){
+					totalBars[1] += 1;
+					totalOre[2] -= 1;
+					totalSmithingExp += 12;
+					update();
+				}, smeltDelay);
+			}
+			else{
+				document.getElementById(ids[0]).disabled = false;
+				document.getElementById(ids[0]).style.backgroundColor = 'grey';
+			}
+		}
+		else if(id == 2){
+			if(totalOre[2] >= 1 && totalOre[3] >= 2){
+				setTimeout(function(){
+					totalBars[2] += 1;
+					totalOre[2] -= 1;
+					totalOre[3] -= 2;
+					totalSmithingExp += 25;
+					update();
+				}, smeltDelay);
+			}
+			else{
+				document.getElementById(ids[0]).disabled = false;
+				document.getElementById(ids[0]).style.backgroundColor = 'grey';
+			}
+		}
+		else if(id == 3){
+			if(totalOre[3] >= 4 && totalOre[4] >= 1){
+				setTimeout(function(){
+					totalBars[3] += 1;
+					totalOre[3] -= 4;
+					totalOre[4] -= 1;
+					totalSmithingExp += 37;
+					update();
+				}, smeltDelay);
+			}
+			else{
+				document.getElementById(ids[0]).disabled = false;
+				document.getElementById(ids[0]).style.backgroundColor = 'grey';
+			}
+		}
+		else if(id == 4){
+			if(totalOre[3] >= 6 && totalOre[5] >= 1){
+				setTimeout(function(){
+					totalBars[3] += 1;
+					totalOre[3] -= 6;
+					totalOre[5] -= 1;
+					totalSmithingExp += 50;
+					update();
+				}, smeltDelay);
+			}
+			else{
+				document.getElementById(ids[0]).disabled = false;
+				document.getElementById(ids[0]).style.backgroundColor = 'grey';
+			}
+		}
+		else if(id == 5){
+			if(totalOre[3] >= 8 && totalOre[6] >= 1){
+				setTimeout(function(){
+					totalBars[3] += 1;
+					totalOre[3] -= 8;
+					totalOre[6] -= 1;
+					totalSmithingExp += 85;
+					update();
+				}, smeltDelay);
+			}
+			else{
+				document.getElementById(ids[0]).disabled = false;
+				document.getElementById(ids[0]).style.backgroundColor = 'grey';
+			}
+		}
+	}
+}
+
+function sellBar(id){
+	if(totalBars[id] > 0){
+		totalBars[id]-= 1;
+		totalGold += barVals[id];
+		update();
+	}
 }
 //TODO
 function save(){
@@ -2102,8 +2684,8 @@ function save(){
 	document.cookie = "ironMinerValC=" + ironMinerVal; 
 	document.cookie = "coalMinerValC=" + coalMinerVal; 
 	document.cookie = "mithrilMinerValC=" + mithrilMinerVal; 
-	document.cookie = "adamantiteMinerValC=" + adamantiteMinerVal; 
-	document.cookie = "runiteMinerValC=" + runiteMinerVal;
+	document.cookie = "adamantMinerValC=" + adamantMinerVal; 
+	document.cookie = "runeMinerValC=" + runeMinerVal;
 	document.cookie = "shrimpFishermanValC=" + shrimpFishermanVal; 
 	document.cookie = "troutFishermanValC=" + troutFishermanVal; 
 	document.cookie = "salmonFishermanValC=" + salmonFishermanVal; 
@@ -2225,8 +2807,8 @@ function load(){
 	ironMinerVal = parseInt(getCookie("ironMinerValC"));
 	coalMinerVal = parseInt(getCookie("coalMinerValC"));
 	mithrilMinerVal = parseInt(getCookie("mithrilMinerValC"));
-	adamantiteMinerVal = parseInt(getCookie("adamantiteMinerValC"));
-	runiteMinerVal = parseInt(getCookie("runiteMinerValC"));
+	adamantMinerVal = parseInt(getCookie("adamantMinerValC"));
+	runeMinerVal = parseInt(getCookie("runeMinerValC"));
 	
 	shrimpFishermanVal = parseInt(getCookie("shrimpFishermanValC"));
 	troutFishermanVal = parseInt(getCookie("troutFishermanValC"));
@@ -2271,12 +2853,14 @@ function travelMines(){
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "none";
 	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("Smelting").style.display = "none";
 	document.getElementById("mines").style.display = "none";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("craft").style.display = "block";
 	document.getElementById("epic").style.display = "block";
+	document.getElementById("furnace").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#999999";
 }
@@ -2288,6 +2872,7 @@ function travelForest(){
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "none";
 	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("Smelting").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "none";
 	document.getElementById("ocean").style.display = "block";
@@ -2295,6 +2880,7 @@ function travelForest(){
 	document.getElementById("death").style.display = "none";
 	document.getElementById("craft").style.display = "block";
 	document.getElementById("epic").style.display = "block";
+	document.getElementById("furnace").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#D2B26F";
 }
@@ -2306,12 +2892,14 @@ function travelOcean(){
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "none";
 	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("Smelting").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "none";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("craft").style.display = "block";
 	document.getElementById("epic").style.display = "block";
+	document.getElementById("furnace").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "cyan";
 }
@@ -2323,12 +2911,14 @@ function travelDungeon(){
 	document.getElementById("Combat").style.display = "block";
 	document.getElementById("Crafting").style.display = "none";
 	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("Smelting").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "none";
 	document.getElementById("craft").style.display = "block";
 	document.getElementById("epic").style.display = "block";
+	document.getElementById("furnace").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#D20010";
 }
@@ -2340,12 +2930,14 @@ function travelCraft(){
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "block";
 	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("Smelting").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("craft").style.display = "none";
 	document.getElementById("epic").style.display = "block";
+	document.getElementById("furnace").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "#DA9F4F";
 }
@@ -2357,14 +2949,35 @@ function travelEpic(){
 	document.getElementById("Combat").style.display = "none";
 	document.getElementById("Crafting").style.display = "none";
 	document.getElementById("Bosses").style.display = "block";
+	document.getElementById("Smelting").style.display = "none";
 	document.getElementById("mines").style.display = "block";
 	document.getElementById("forest").style.display = "block";
 	document.getElementById("ocean").style.display = "block";
 	document.getElementById("dungeon").style.display = "block";
 	document.getElementById("craft").style.display = "block";
 	document.getElementById("epic").style.display = "none";
+	document.getElementById("furnace").style.display = "block";
 	document.getElementById("bottom").style.display = "block";
 	document.body.style.backgroundColor = "white";
+}
+
+function travelFurnace(){
+	document.getElementById("Woodcutting").style.display = "none";
+	document.getElementById("Mining").style.display = "none";
+	document.getElementById("Fishing").style.display = "none";
+	document.getElementById("Combat").style.display = "none";
+	document.getElementById("Crafting").style.display = "none";
+	document.getElementById("Bosses").style.display = "none";
+	document.getElementById("Smelting").style.display = "block";
+	document.getElementById("mines").style.display = "block";
+	document.getElementById("forest").style.display = "block";
+	document.getElementById("ocean").style.display = "block";
+	document.getElementById("dungeon").style.display = "block";
+	document.getElementById("craft").style.display = "block";
+	document.getElementById("epic").style.display = "block";
+	document.getElementById("furnace").style.display = "none";
+	document.getElementById("bottom").style.display = "block";
+	document.body.style.backgroundColor = "orange";
 }
 
 function travelCook(){
@@ -2384,8 +2997,8 @@ function reenableButtons(){
 	document.getElementById("ironButton").disable = false;
 	document.getElementById("coalButton").disable = false;
 	document.getElementById("mithrilButton").disable = false;
-	document.getElementById("adamantiteButton").disable = false;
-	document.getElementById("runiteButton").disable = false;
+	document.getElementById("adamantButton").disable = false;
+	document.getElementById("runeButton").disable = false;
 }
 
 function move() {
